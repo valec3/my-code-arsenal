@@ -1,0 +1,82 @@
+# ==============================================================================
+# MASTER GITIGNORE - MY CODE ARSENAL
+# ==============================================================================
+# Diseñado para mantener un aislamiento absoluto de mini-apps utilitarias.
+# Evita la contaminación de dependencias, variables de entorno y archivos de IDE.
+
+# ------------------------------------------------------------------------------
+# 1. Archivos de Entorno & Credenciales (CRÍTICO)
+# ------------------------------------------------------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.pem
+*.key
+*.cert
+credentials.json
+
+# ------------------------------------------------------------------------------
+# 2. Gestión de Dependencias (Aislamiento de cada subproyecto)
+# ------------------------------------------------------------------------------
+node_modules/
+jspm_packages/
+.pnpm-store/
+.yarn-state/
+vendor/
+
+# ------------------------------------------------------------------------------
+# 3. Compilaciones, Paquetes & Distribuciones
+# ------------------------------------------------------------------------------
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.serverless/
+.output/
+
+# ------------------------------------------------------------------------------
+# 4. Logs, Caché & Archivos de Ejecución
+# ------------------------------------------------------------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.npm/
+.yarn/
+
+# ------------------------------------------------------------------------------
+# 5. Configuraciones de IDEs & Herramientas de Desarrollo
+# ------------------------------------------------------------------------------
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.fleet/
+.replit/
+.copilot-instructions.md
+
+# ------------------------------------------------------------------------------
+# 6. Archivos Basura del Sistema Operativo
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini

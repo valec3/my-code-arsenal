@@ -1,0 +1,47 @@
+# ==============================================================================
+# AI AGENT RULES - MY CODE ARSENAL MONOREPO
+# ==============================================================================
+# This file governs the behavior of all LLM and agentic AI systems operating
+# in the my-code-arsenal workspace.
+
+# ------------------------------------------------------------------------------
+# 1. CORE ARCHITECTURE CONTEXT
+# ------------------------------------------------------------------------------
+*   **Isolated Monorepo**: This workspace contains separate, independent applications.
+*   **Root Folder**: The root directory ONLY contains global documentation, shared git ignore configuration, and these AI/Agent instructions.
+*   **No Global Dependecies**: There are NO global node modules, composer packages, or configuration files linking the applications together.
+
+# ------------------------------------------------------------------------------
+# 2. RUNNING TERMINAL COMMANDS (CRITICAL MANDATE)
+# ------------------------------------------------------------------------------
+*   **YOU MUST NEVER** run installation, build, or execution commands directly from the root workspace directory without explicitly changing directories first.
+*   **DO NOT RUN**: `npm install`, `npm run dev`, `jest`, `tsc`, `composer install` in `c:/Users/ADMIN/Development/personal/my-code-arsenal/`
+*   **ALWAYS RUN**: `cd <subfolder> && <command>` (e.g. `cd express-file-uploader && npm install`) OR target them using path-based arguments (e.g. `npm --prefix express-file-uploader install`).
+
+# ------------------------------------------------------------------------------
+# 3. DIRECTORY STRUCTURE RULES
+# ------------------------------------------------------------------------------
+*   **NO `package.json` in ROOT**: Under no circumstances should you generate a `package.json` in the root workspace directory.
+*   **NO `node_modules` in ROOT**: Under no circumstances should you trigger a package installation in the root directory.
+*   **Subproject Isolation**: When creating, modifying, or reading files, strictly stay within the scope of the target subproject (e.g., `/express-file-uploader` or `/node-jira-bot`). Do not import or refer to code from one utility inside another.
+
+# ------------------------------------------------------------------------------
+# 4. ENVIRONMENT VARIABLES
+# ------------------------------------------------------------------------------
+*   Every utility project manages its own `.env` configuration file.
+*   Do not attempt to read or write a root-level `.env` file.
+*   Always instruct users to update the `.env` inside the relevant subproject folder (e.g. `express-file-uploader/.env`).
+
+# ------------------------------------------------------------------------------
+# 5. GIT HYGIENE AND COMMIT MESSAGE ENFORCEMENT
+# ------------------------------------------------------------------------------
+*   **Conventional Commits**: You must frame all commit messages using conventional commit format with the scope set to the subproject you are modifying:
+    *   `feat(uploader): add mime-type validation`
+    *   `fix(jira-bot): handle API rate limit responses`
+*   **No AI Attribution**: Do not add "Co-Authored-By", "AI-Generated", or any LLM attribution footers to git commits.
+
+# ------------------------------------------------------------------------------
+# 6. HOW TO ADD A NEW UTILITY
+# ------------------------------------------------------------------------------
+*   Refer to `CONTRIBUTING.md` before generating code for a new subproject.
+*   Ensure the new project has its own `.gitignore`, `.env.example`, `package.json` (or language equivalent), and a self-contained documentation `README.md`.

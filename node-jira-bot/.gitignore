@@ -1,0 +1,7 @@
+# Dependencias y compilados locales
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Configuración y credenciales locales
+.env

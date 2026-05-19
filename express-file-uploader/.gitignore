@@ -1,0 +1,11 @@
+# Dependencias y compilados locales
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Configuración y secretos del entorno local
+.env
+
+# Exclusión de archivos subidos por usuarios (manteniendo la carpeta vacía en Git)
+uploads/*
+!uploads/.gitkeep

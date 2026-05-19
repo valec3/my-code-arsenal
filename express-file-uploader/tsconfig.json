@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                          /* Especifica la versión del lenguaje ECMAScript de destino */
+    "module": "commonjs",                        /* Especifica el código de generación del módulo */
+    "rootDir": "./src",                          /* Carpeta raíz de los archivos de entrada */
+    "outDir": "./dist",                          /* Carpeta de salida para los archivos compilados */
+    "esModuleInterop": true,                      /* Emite JavaScript adicional para facilitar la importación de módulos CommonJS */
+    "forceConsistentCasingInFileNames": true,    /* Asegura que las mayúsculas y minúsculas sean consistentes en las importaciones */
+    "strict": true,                              /* Habilita todas las comprobaciones estrictas de tipos */
+    "skipLibCheck": true                         /* Omite la comprobación de tipos de archivos de declaración (.d.ts) */
+  },
+  "include": ["src/**/*"]
+}
