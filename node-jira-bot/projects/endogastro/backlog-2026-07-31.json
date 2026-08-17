@@ -1,0 +1,270 @@
+[
+  {
+    "summary": "ÉPICA: Anamnesis — Filiación y Programación",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Reportes de Anamnesis",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "Filtros de especialidad en vista de reportes de anamnesis",
+            "description": "Implementar filtros por especialidad en la vista de reportes de anamnesis para que los usuarios puedan segmentar los reportes por la especialidad del profesional.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Atención Médica — Consulta y Procedimientos",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Sala de Espera",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "Filtros de especialidad en vista de sala de espera",
+            "description": "Implementar filtros por especialidad en la vista de sala de espera para que los médicos y operadores puedan filtrar los pacientes en espera por la especialidad del servicio.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Farmacia — Medicamentos, Stock y Recetas",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Corrección de Plantillas de Farmacia",
+        "description": "Corregir bugs en las plantillas de farmacia relacionados con las indicaciones, recetas y formatos de impresión.",
+        "priority": "High",
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Fix bug en indicaciones de plantillas de farmacia",
+            "description": "Revisar y corregir el bug que causa que las indicaciones no se muestren correctamente en las plantillas de farmacia. Validar mapeo de datos, formatos ADF y renderizado en todos los formatos de plantilla.",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Laboratorio — Exámenes y Análisis",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Corrección de Plantillas de Laboratorio",
+        "description": "Corregir bugs en las plantillas de laboratorio relacionados con las indicaciones y formatos de resultados.",
+        "priority": "High",
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Fix bug en indicaciones de plantillas de laboratorio",
+            "description": "Revisar y corregir el bug que causa que las indicaciones no se muestren correctamente en las plantillas de laboratorio. Validar mapeo de datos y renderizado en todos los formatos de plantilla de resultados.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Exámenes Personalizados en Recetas de Laboratorio",
+        "description": "Como médico, necesito poder agregar exámenes que no están en el catálogo de la base de datos directamente desde la receta de laboratorio, sin tener que registrarlos previamente en el catálogo.",
+        "priority": "Medium",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoint para exámenes ad-hoc en recetas de laboratorio",
+            "description": "Crear o modificar endpoint que permita incluir exámenes no catalogados (texto libre) en las recetas de laboratorio. Debe guardarse como campo adicional sin afectar el catálogo existente y mostrarse correctamente en la receta.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Campo de texto libre para exámenes no catalogados en recetas de laboratorio",
+            "description": "Agregar en el formulario de receta de laboratorio una opción para ingresar exámenes personalizados (texto libre) que no están en el catálogo. Incluir autocompletado, validación y visualización en el preview de la receta.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Usuarios y Profesionales de Salud",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Agregar campo RNE (Registro Nacional de Especialidad) a profesional",
+            "description": "Agregar el campo RNE al modelo de profesional en la base de datos y en el endpoint CRUD. Incluir validación de formato del RNE y que sea opcional. El RNE es un registro oficial peruano que certifica la especialidad del profesional de salud.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Agregar campo RNE en formulario de registro/edición de profesional",
+            "description": "Agregar campo RNE en el formulario de creación y edición de profesionales de salud. Incluir validación de formato, tooltip informativo y visualización en la tabla de profesionales.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Agregar campo de profesiones al modelo de usuarios",
+            "description": "Agregar campo de profesión al modelo de usuario en la base de datos y endpoints CRUD. Debe ser un campo de texto libre o un catálogo de profesiones predefinidas que el administrador pueda gestionar.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Agregar campo de profesiones en formulario de usuarios",
+            "description": "Agregar selector o campo de texto para ingresar la profesión del usuario en el formulario de creación y edición. Mostrar en la tabla de usuarios y permitir filtrado por profesión.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[BACKEND] Agregar foto/avatar al perfil de doctores",
+            "description": "Agregar campo de foto al modelo de profesional. Implementar endpoint para upload de imagen con validación de formato y tamaño. Debe almacenarse y servirse correctamente. Preparar para futura migración a R2.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Agregar upload y visualización de foto de doctores",
+            "description": "Agregar componente de upload de foto en el formulario de profesionales. Incluir preview, recorte básico, validación de formatos (JPG, PNG) y tamaño máximo. Mostrar foto en la tabla de profesionales y en el perfil del doctor.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Sucursales y Kardex",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "Inicializar kardex en sucursales Ilave y Desaguadero",
+            "description": "Configurar e inicializar el kardex para las sucursales de Ilave y Desaguadero. Debe incluir la carga inicial de inventario, configuración de permisos para los roles correspondientes y validación de que los movimientos se registren correctamente desde el primer día.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Renovación del Sitio Web de Endogastro",
+        "description": "Renovación completa del sitio web de Endogastro con múltiples páginas: institucionales, informativas, de servicios y contacto. Tarea compleja que requiere diseño, desarrollo y despliegue.",
+        "priority": "Medium",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Diseño de arquitectura de páginas, navegación y rutas del sitio web",
+            "description": "Definir la arquitectura del nuevo sitio web: mapa de páginas, jerarquía de navegación, sistema de rutas, componentes compartidos (header, footer, layout base). Diseñar wireframes de las páginas principales.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Desarrollo de páginas institucionales (Home, Nosotros, Servicios, Especialidades)",
+            "description": "Desarrollar las páginas institucionales del sitio: Home con hero y features principales, página Nosotros con historia y misión, página de Servicios con detalle de cada servicio médico, página de Especialidades con el equipo de doctores.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Desarrollo de páginas informativas (FAQ, Contacto, Descargas, Blog)",
+            "description": "Desarrollar páginas informativas: Preguntas Frecuentes, formulario de Contacto con validación, página de descargas de la app mobile con badges, y sección de Blog/Noticias si aplica.",
+            "priority": "Low"
+          },
+          {
+            "summary": "[FRONTEND] SEO, rendimiento, optimización y despliegue del sitio web",
+            "description": "Implementar optimizaciones SEO (meta tags, sitemap, robots.txt, schema.org), optimización de rendimiento (lazy loading, compresión de assets, caching), responsive design completo, y despliegue en el dominio de Endogastro.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Documentación del Sistema",
+        "description": "Documentación técnica global del sistema Endogastro: endpoints del backend, componentes del frontend, guías de desarrollo y manuales de usuario.",
+        "priority": "Low",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "Documentación de endpoints y API del backend",
+            "description": "Documentar todos los endpoints de la API: métodos HTTP, parámetros, cuerpos de request/response, códigos de estado, ejemplos de uso. Usar Swagger/OpenAPI o similar para generar documentación interactiva.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "Documentación de componentes, vistas y flujos del frontend",
+            "description": "Documentar la arquitectura del frontend: estructura de componentes, flujos de navegación, estados globales, convenciones de código, guía de estilos y design system. Incluir README de setup para nuevos desarrolladores.",
+            "priority": "Low"
+          },
+          {
+            "summary": "Manuales de usuario y guías de operación por módulo",
+            "description": "Crear manuales de usuario por módulo del sistema (Anamnesis, Atención Médica, Farmacia, Laboratorio, Caja, Administración, App Mobile) con capturas de pantalla y flujos paso a paso.",
+            "priority": "Low"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Refactorización de Código",
+        "description": "Tarea de refactorización global del código base. Requiere análisis previo para definir el alcance, módulos a refactorizar, prioridades y criterios de aceptación.",
+        "priority": "Low",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[PLANIFICACIÓN] Análisis y definición de alcance de refactorización",
+            "description": "Realizar análisis del código base actual para identificar áreas críticas a refactorizar: componentes con alta deuda técnica, endpoints ineficientes, queries sin optimizar, código duplicado, patrones inconsistentes. Definir prioridades, alcance y plan de trabajo.",
+            "priority": "Low"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: App Mobile — iOS y Android (Pacientes + Doctores)",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Actualización de Funcionalidades para Doctores en App Mobile v2",
+        "description": "Actualización mayor de las funcionalidades del panel de doctores en la app mobile. Tarea altamente compleja que requiere definición detallada del alcance, nuevas features, mejoras de UX y sincronización con el backend.",
+        "priority": "High",
+        "storyPoints": 13,
+        "tasks": [
+          {
+            "summary": "[PLANIFICACIÓN] Definición de alcance y features para actualización de doctores mobile v2",
+            "description": "Reunir requerimientos con los doctores y stakeholders para definir el alcance completo de la actualización v2: nuevas funcionalidades solicitadas, mejoras a funcionalidades existentes (citas, sala de espera, meet), UX/UI, flujos offline, sincronización. Entregable: documento de especificación de features y roadmap.",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: DevOps e Infraestructura",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: CI/CD — Pipelines de Build y Testing",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Configurar entorno de pruebas para backend",
+            "description": "Configurar un entorno de pruebas independiente para el backend: base de datos de testing, variables de entorno separadas, deploy automatizado desde rama de desarrollo, datos de prueba anonimizados. Debe permitir testing sin afectar producción.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[DEVOPS] Configurar entorno de pruebas para frontend",
+            "description": "Configurar un entorno de pruebas para el frontend: build de staging, conexión al backend de pruebas, variables de entorno de staging, deploy preview en Vercel/Netlify o similar para revisión antes de producción.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Migración de Archivos a Cloudflare R2",
+        "description": "Migración completa de todos los archivos del sistema (recetas, tickets, boletas, informes, resultados, procedimientos, fotos de doctores) al servicio de almacenamiento R2 de Cloudflare. Tarea altamente compleja por el volumen y variedad de archivos.",
+        "priority": "High",
+        "storyPoints": 13,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Configurar bucket R2 y migrar archivos existentes (recetas, tickets, boletas)",
+            "description": "Crear bucket en Cloudflare R2. Desarrollar script de migración para transferir recetas, tickets y boletas desde el almacenamiento actual a R2. Incluir verificación de integridad, manejo de errores y logging. No debe haber pérdida de archivos.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Migrar archivos médicos (informes, resultados de laboratorio, procedimientos) a R2",
+            "description": "Migrar informes de anatomía patológica, resultados de exámenes de laboratorio y documentos de procedimientos a R2. Validar que los archivos clínicos mantengan su integridad y trazabilidad. Implementar URLs firmadas para acceso seguro.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Adaptar vistas y componentes para servir archivos desde R2",
+            "description": "Actualizar todos los componentes del frontend que muestran o descargan archivos (recetas, informes, resultados, boletas) para que consuman las nuevas URLs de R2. Mantener compatibilidad con archivos aún no migrados durante la transición. Probar en todos los módulos afectados.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]

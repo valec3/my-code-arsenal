@@ -5,3 +5,9 @@ dist/
 
 # Configuración y credenciales locales
 .env
+
+# Archivos de ejecución (generados en cada run)
+created-issues.json
+
+# Registry de skills (generado automáticamente)
+.atl/

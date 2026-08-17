@@ -1,41 +1,73 @@
 import fs from 'fs';
 import path from 'path';
-import { env } from './config/env';
-import { jiraService } from './services/jira.service';
+import { loadConfig } from './config/env';
+import { JiraService } from './services/jira.service';
 import { BacklogEpic } from './types/jira.types';
 
 // ==============================================================================
-// ORQUESTADOR PRINCIPAL - CASCADA DE APROVISIONAMIENTO
+// ORQUESTADOR PRINCIPAL - CASCADA DE APROVISIONAMIENTO MULTI-PROYECTO
+// ==============================================================================
+// Uso: pnpm run dev <proyecto> [archivo-backlog]
+// Ejemplos:
+//   pnpm run dev cgs                           # usa backlog.json
+//   pnpm run dev cgs backlog-sprint-2.json      # usa archivo específico
+//
+// Cada proyecto vive en projects/<nombre>/ con:
+//   - .env          (JIRA_PROJECT_KEY, tipos custom)
+//   - backlog.json  (épicas, historias, tareas)
+//   - backlog-*.json (lotes incrementales opcionales)
+//
+// Las credenciales comunes (HOST, EMAIL, TOKEN) van en el .env raíz.
 // ==============================================================================
 
 async function main() {
+  // 1. Parsear nombre del proyecto y archivo de backlog desde CLI
+  const args = process.argv.slice(2);
+  const projectName = args[0] || null;
+  const backlogFile = args[1] || 'backlog.json';
+
   console.clear();
   console.log('======================================================================');
   console.log('🚀 JIRA HIERARCHICAL PROVISIONER — CASCADA DE BACKLOG');
+  if (projectName) {
+    console.log(`📁 Proyecto: ${projectName}`);
+  }
   console.log('======================================================================\n');
 
-  // 1. Probar Conexión con Jira Cloud
+  // 2. Cargar configuración (raíz + proyecto específico)
+  const config = loadConfig(projectName || undefined);
+  const jiraService = new JiraService(config);
+
+  // 3. Determinar directorio del proyecto
+  const projectDir = projectName
+    ? path.resolve(process.cwd(), 'projects', projectName)
+    : process.cwd();
+
+  // 4. Probar Conexión con Jira Cloud
   console.log('🔄 Validando credenciales de conexión con Jira Cloud...');
   try {
     const user = await jiraService.testConnection();
     console.log(`✅ ¡Conexión Establecida!`);
     console.log(`👤 Usuario: ${user.displayName}`);
     console.log(`📧 Email: ${user.emailAddress}`);
-    console.log(`🏢 Host: ${env.JIRA_HOST}`);
-    console.log(`🔑 Proyecto Destino: [${env.JIRA_PROJECT_KEY}]\n`);
+    console.log(`🏢 Host: ${config.JIRA_HOST}`);
+    console.log(`🔑 Proyecto Destino: [${config.JIRA_PROJECT_KEY}]\n`);
   } catch (error: any) {
     console.error(`❌ Fallo de Conexión Crítico: ${error.message}`);
     process.exit(1);
   }
 
-  // 2. Localizar y Cargar el Archivo backlog.json
-  // Buscamos backlog.json tanto en el directorio raíz del subproyecto como en base al Cwd para mayor resiliencia
-  const backlogPath = path.resolve(process.cwd(), 'backlog.json');
+  // 5. Localizar y Cargar el Archivo de backlog
+  const backlogPath = path.resolve(projectDir, backlogFile);
   
   if (!fs.existsSync(backlogPath)) {
     console.error('❌ Archivo de Backlog no encontrado.');
     console.error(`Buscado en la ruta: ${backlogPath}`);
-    console.error('Por favor, creá el archivo backlog.json en la raíz de node-jira-bot/ antes de ejecutar.');
+    if (projectName) {
+      console.error(`Creá el archivo en projects/${projectName}/backlog.json`);
+    } else {
+      console.error('Creá el archivo backlog.json en la raíz de node-jira-bot/ o usá: pnpm run dev <proyecto>');
+    }
     process.exit(1);
   }
 
@@ -47,7 +79,6 @@ async function main() {
     backlog = JSON.parse(rawData);
     
     if (!Array.isArray(backlog)) {
-      // Si el usuario nos pasó una sola Épica como objeto en vez de un array, lo encapsulamos en un array
       if (typeof backlog === 'object' && backlog !== null) {
         backlog = [backlog];
       } else {
@@ -63,94 +94,118 @@ async function main() {
   console.log(`📊 Se cargaron [${backlog.length}] Épicas para procesar.`);
   console.log('----------------------------------------------------------------------\n');
 
-  // Estadísticas finales y registro de incidencias creadas para purga automática
+  // 6. Estadísticas finales y registro de incidencias creadas para purga automática
   let epicsCreated = 0;
   let storiesCreated = 0;
   let tasksCreated = 0;
   const createdKeys: string[] = [];
 
+  const createdIssuesPath = path.resolve(projectDir, 'created-issues.json');
+
   const saveCreatedKeys = () => {
     if (createdKeys.length > 0) {
-      const logPath = path.resolve(process.cwd(), 'created-issues.json');
-      fs.writeFileSync(logPath, JSON.stringify(createdKeys, null, 2), 'utf-8');
+      fs.writeFileSync(createdIssuesPath, JSON.stringify(createdKeys, null, 2), 'utf-8');
     }
   };
 
-  // 3. Procesar Cascada en Orden Jerárquico Estricto
+  // 7. Procesar Cascada en Orden Jerárquico Estricto: Epic → Story → Task
   try {
     for (let i = 0; i < backlog.length; i++) {
       const epicData = backlog[i];
       const epicNumber = i + 1;
 
-      console.log(`\n👑 [ÉPICA ${epicNumber}/${backlog.length}] Creando: "${epicData.summary}"...`);
-      if (epicData.priority) console.log(`   🔸 Prioridad: ${epicData.priority}`);
-      
-      // Crear la Épica
-      const epicResponse = await jiraService.createIssue(
-        epicData.summary,
-        epicData.description || 'Creado automáticamente',
-        env.JIRA_EPIC_TYPE,
-        undefined,
-        epicData.priority
-      );
-      
-      epicsCreated++;
-      createdKeys.push(epicResponse.key);
-      const epicLink = `${env.JIRA_HOST.replace(/\/$/, '')}/browse/${epicResponse.key}`;
-      console.log(`   ➡️ ¡Creada con éxito! Key: [ ${epicResponse.key} ]`);
-      console.log(`   🔗 Enlace: ${epicLink}\n`);
+      let epicKey: string;
 
-      // Iterar HUs asociadas a esta Épica
+      if (epicData.existingEpicKey) {
+        console.log(`\n🔍 [ÉPICA ${epicNumber}/${backlog.length}] Buscando existente: "${epicData.summary}"...`);
+        const foundEpic = await jiraService.findIssueBySummary(epicData.summary);
+        if (!foundEpic) {
+          console.error(`   ❌ No se encontró la épica "${epicData.summary}" en el proyecto. ¿Ya fue creada?`);
+          process.exit(1);
+        }
+        epicKey = foundEpic.key;
+        console.log(`   ✅ Épica encontrada: [ ${epicKey} ]`);
+      } else {
+        console.log(`\n👑 [ÉPICA ${epicNumber}/${backlog.length}] Creando: "${epicData.summary}"...`);
+        if (epicData.priority) console.log(`   🔸 Prioridad: ${epicData.priority}`);
+        const epicResponse = await jiraService.createIssue(
+          epicData.summary,
+          epicData.description || 'Creado automáticamente',
+          config.JIRA_EPIC_TYPE,
+          undefined,
+          epicData.priority
+        );
+        epicKey = epicResponse.key;
+        epicsCreated++;
+        createdKeys.push(epicKey);
+        const epicLink = `${config.JIRA_HOST.replace(/\/$/, '')}/browse/${epicKey}`;
+        console.log(`   ➡️ ¡Creada con éxito! Key: [ ${epicKey} ]`);
+        console.log(`   🔗 Enlace: ${epicLink}`);
+      }
+      console.log('');
+
+      // Iterar Historias de Usuario asociadas a esta Épica
       const stories = epicData.stories || [];
       for (let j = 0; j < stories.length; j++) {
         const storyData = stories[j];
         const storyNumber = j + 1;
 
-        console.log(`   📄 [HU ${storyNumber}/${stories.length}] Creando: "${storyData.summary}"...`);
-        if (storyData.priority) console.log(`      🔸 Prioridad: ${storyData.priority}`);
-        if (storyData.storyPoints !== undefined) console.log(`      🔸 Story Points: ${storyData.storyPoints}`);
-        
-        // Crear la Story asociada a la Épica
-        const storyResponse = await jiraService.createIssue(
-          storyData.summary,
-          storyData.description || 'Creado automáticamente',
-          env.JIRA_STORY_TYPE,
-          epicResponse.key, // Inyectamos Epic-Key como parent de la Story
-          storyData.priority,
-          storyData.storyPoints
-        );
+        let storyKey: string;
 
-        storiesCreated++;
-        createdKeys.push(storyResponse.key);
-        const storyLink = `${env.JIRA_HOST.replace(/\/$/, '')}/browse/${storyResponse.key}`;
-        console.log(`      ➡️ ¡Creada con éxito! Key: [ ${storyResponse.key} ] (Asociada a Épica: ${epicResponse.key})`);
-        console.log(`      🔗 Enlace: ${storyLink}\n`);
+        if (storyData.existingStoryKey) {
+          console.log(`   🔍 [HU ${storyNumber}/${stories.length}] Buscando existente: "${storyData.summary}"...`);
+          const foundStory = await jiraService.findIssueBySummary(storyData.summary);
+          if (!foundStory) {
+            console.error(`   ❌ No se encontró la HU "${storyData.summary}" en el proyecto. ¿Ya fue creada?`);
+            process.exit(1);
+          }
+          storyKey = foundStory.key;
+          console.log(`   ✅ HU encontrada: [ ${storyKey} ]`);
+        } else {
+          console.log(`   📄 [HU ${storyNumber}/${stories.length}] Creando: "${storyData.summary}"...`);
+          if (storyData.priority) console.log(`      🔸 Prioridad: ${storyData.priority}`);
+          if (storyData.storyPoints !== undefined) console.log(`      🔸 Story Points: ${storyData.storyPoints}`);
+          const storyResponse = await jiraService.createIssue(
+            storyData.summary,
+            storyData.description || 'Creado automáticamente',
+            config.JIRA_STORY_TYPE,
+            epicKey,
+            storyData.priority,
+            storyData.storyPoints
+          );
+          storyKey = storyResponse.key;
+          storiesCreated++;
+          createdKeys.push(storyKey);
+          const storyLink = `${config.JIRA_HOST.replace(/\/$/, '')}/browse/${storyKey}`;
+          console.log(`      ➡️ ¡Creada con éxito! Key: [ ${storyKey} ] (Asociada a Épica: ${epicKey})`);
+          console.log(`      🔗 Enlace: ${storyLink}`);
+        }
+        console.log('');
 
-        // Iterar Subtareas asociadas a esta HU
+        // Iterar Tareas asociadas a esta HU
         const tasks = storyData.tasks || [];
         for (let k = 0; k < tasks.length; k++) {
           const taskData = tasks[k];
           const taskNumber = k + 1;
 
-          console.log(`      🛠️ [TAREA ${taskNumber}/${tasks.length}] Creando: "${taskData.summary}"...`);
+          console.log(`      🛠️ [SUBTAREA ${taskNumber}/${tasks.length}] Creando: "${taskData.summary}"...`);
           if (taskData.priority) console.log(`         🔸 Prioridad: ${taskData.priority}`);
           
-          // Crear la Subtarea asociada a la Story
           const taskResponse = await jiraService.createIssue(
             taskData.summary,
             taskData.description || 'Creado automáticamente',
-            env.JIRA_SUBTASK_TYPE,
-            storyResponse.key, // Inyectamos Story-Key como parent de la Subtarea
+            config.JIRA_SUBTASK_TYPE,
+            storyKey,
             taskData.priority
           );
 
           tasksCreated++;
           createdKeys.push(taskResponse.key);
-          const taskLink = `${env.JIRA_HOST.replace(/\/$/, '')}/browse/${taskResponse.key}`;
-          console.log(`         ➡️ ¡Creada con éxito! Key: [ ${taskResponse.key} ] (Asociada a HU: ${storyResponse.key})`);
+          const taskLink = `${config.JIRA_HOST.replace(/\/$/, '')}/browse/${taskResponse.key}`;
+          console.log(`         ➡️ ¡Creada con éxito! Key: [ ${taskResponse.key} ] (Asociada a HU: ${storyKey})`);
           console.log(`         🔗 Enlace: ${taskLink}`);
         }
-        if (tasks.length > 0) console.log(''); // Salto de línea estético
+        if (tasks.length > 0) console.log('');
       }
       console.log('----------------------------------------------------------------------');
     }
@@ -158,7 +213,7 @@ async function main() {
     // Persistir el listado total al finalizar con éxito
     saveCreatedKeys();
 
-    // 4. Reporte Final de Éxito
+    // 8. Reporte Final de Éxito
     console.log('\n======================================================================');
     console.log('🎉 APROVISIONAMIENTO COMPLETADO DE MANERA EXITOSA');
     console.log('======================================================================');
@@ -167,7 +222,11 @@ async function main() {
     console.log(`🛠️ Subtareas creadas:  ${tasksCreated}`);
     console.log(`📊 Total de issues:    ${epicsCreated + storiesCreated + tasksCreated}`);
     console.log('----------------------------------------------------------------------');
-    console.log('💡 Consejo: Si querés limpiar este backlog de prueba, simplemente corre:\n   pnpm run purge');
+    if (projectName) {
+      console.log(`💡 Para limpiar este backlog: pnpm run purge ${projectName}`);
+    } else {
+      console.log('💡 Para limpiar este backlog: pnpm run purge');
+    }
     console.log('======================================================================\n');
 
   } catch (error: any) {
@@ -179,7 +238,11 @@ async function main() {
     console.error('El script se detuvo para evitar elementos huérfanos o desordenados.');
     console.error(`Detalle del error: ${error.message}`);
     console.error('----------------------------------------------------------------------');
-    console.error('💡 Nota: Podés limpiar los issues creados hasta este punto corriendo:\n   pnpm run purge');
+    if (projectName) {
+      console.error(`💡 Podés limpiar los issues creados hasta este punto con:\n   pnpm run purge ${projectName}`);
+    } else {
+      console.error('💡 Podés limpiar los issues creados hasta este punto con:\n   pnpm run purge');
+    }
     console.error('======================================================================\n');
     process.exit(1);
   }

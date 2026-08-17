@@ -1,20 +1,36 @@
 import fs from 'fs';
 import path from 'path';
-import { jiraService } from './services/jira.service';
-import { env } from './config/env';
+import { JiraService } from './services/jira.service';
+import { loadConfig } from './config/env';
 
 async function purge() {
   const args = process.argv.slice(2);
+  
+  // El primer argumento sin flag es el nombre del proyecto
+  // Flags: --all | -a
+  const projectName = args.find(arg => arg !== '--all' && arg !== '-a') || null;
   const isPurgeAll = args.includes('--all') || args.includes('-a');
   
-  // Filtramos los flags para quedarnos solo con las keys explícitas
-  let keys = args.filter(arg => arg !== '--all' && arg !== '-a');
-  const logPath = path.resolve(process.cwd(), 'created-issues.json');
+  // Filtramos los flags y el nombre del proyecto para quedarnos solo con las keys explícitas
+  let keys = args.filter(arg => arg !== '--all' && arg !== '-a' && arg !== projectName);
+  
+  // Determinar directorio del proyecto
+  const projectDir = projectName
+    ? path.resolve(process.cwd(), 'projects', projectName)
+    : process.cwd();
+  const logPath = path.resolve(projectDir, 'created-issues.json');
   let loadedFromLog = false;
 
   console.log('======================================================================');
   console.log('🗑️  JIRA BULK PURGER — LIMPIADOR DE BACKLOG');
+  if (projectName) {
+    console.log(`📁 Proyecto: ${projectName}`);
+  }
   console.log('======================================================================\n');
+
+  // Cargar configuración y crear servicio
+  const config = loadConfig(projectName || undefined);
+  const jiraService = new JiraService(config);
 
   // Inicialización de conexión para validar credenciales y obtener usuario
   console.log('🔄 Validando credenciales de conexión con Jira Cloud...');
@@ -23,8 +39,8 @@ async function purge() {
     user = await jiraService.testConnection();
     console.log(`✅ ¡Conexión Establecida!`);
     console.log(`👤 Autorizado como: ${user.displayName} (${user.emailAddress})`);
-    console.log(`🏢 Host: ${env.JIRA_HOST}`);
-    console.log(`🔑 Proyecto Target: [${env.JIRA_PROJECT_KEY}]\n`);
+    console.log(`🏢 Host: ${config.JIRA_HOST}`);
+    console.log(`🔑 Proyecto Target: [${config.JIRA_PROJECT_KEY}]\n`);
     console.log('----------------------------------------------------------------------\n');
   } catch (error: any) {
     console.error(`❌ Fallo de conexión: ${error.message}`);
@@ -33,7 +49,7 @@ async function purge() {
 
   // 1. Si se solicita --all, consultamos Jira para obtener todas las incidencias del proyecto
   if (isPurgeAll) {
-    console.log(`⚠️  ALERTA NUCLEAR: Buscando ABSOLUTAMENTE TODAS las incidencias del proyecto [${env.JIRA_PROJECT_KEY}]...`);
+    console.log(`⚠️  ALERTA NUCLEAR: Buscando ABSOLUTAMENTE TODAS las incidencias del proyecto [${config.JIRA_PROJECT_KEY}]...`);
     try {
       keys = await jiraService.getProjectIssueKeys();
       console.log(`📊 Encontradas [${keys.length}] incidencias totales en el proyecto.`);
@@ -64,9 +80,15 @@ async function purge() {
   if (keys.length === 0) {
     console.error('❌ Error: No se especificaron claves ni se detectó actividad previa.');
     console.log('Uso de comandos:');
-    console.log('  pnpm run purge                -> Borra lo creado en tu última ejecución automática');
-    console.log('  pnpm run purge KEY-1 KEY-2    -> Borra las incidencias específicas ingresadas');
-    console.log('  pnpm run purge --all          -> ⚠️  PURGA NUCLEAR: Borra absolutamente TODO en el proyecto');
+    if (projectName) {
+      console.log(`  pnpm run purge ${projectName}             -> Borra lo creado en tu última ejecución del proyecto`);
+      console.log(`  pnpm run purge ${projectName} KEY-1 KEY-2 -> Borra las incidencias específicas`);
+      console.log(`  pnpm run purge ${projectName} --all       -> ⚠️  PURGA NUCLEAR del proyecto`);
+    } else {
+      console.log('  pnpm run purge                -> Borra lo creado en tu última ejecución automática');
+      console.log('  pnpm run purge KEY-1 KEY-2    -> Borra las incidencias específicas ingresadas');
+      console.log('  pnpm run purge --all          -> ⚠️  PURGA NUCLEAR: Borra absolutamente TODO en el proyecto');
+    }
     console.log('\n======================================================================\n');
     process.exit(1);
   }

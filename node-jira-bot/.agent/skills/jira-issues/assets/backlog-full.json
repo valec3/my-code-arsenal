@@ -1,0 +1,100 @@
+[
+  {
+    "summary": "ÉPICA: Autenticación y Seguridad [Fase 1]",
+    "description": "Implementar el flujo completo de registro, login, y protección de rutas con JWT para garantizar acceso seguro a la plataforma.",
+    "priority": "Highest",
+    "stories": [
+      {
+        "summary": "HU: Registro de usuarios con validación",
+        "description": "Como usuario nuevo, quiero registrarme con mi email y contraseña para crear una cuenta en la plataforma.",
+        "priority": "Highest",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[DB] Diseñar esquema de usuarios con campos requeridos",
+            "description": "Crear tabla users con id, email (unique), password_hash, created_at. Índice sobre email.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/auth/register",
+            "description": "Validar email único, hashear contraseña con bcrypt (12 rounds), retornar 201 con id y email.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Validación de formato de email y fortaleza de contraseña",
+            "description": "Email: regex RFC 5322. Contraseña: mínimo 8 chars, 1 mayúscula, 1 número, 1 especial.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Formulario de registro con feedback visual",
+            "description": "Campos: email, password, confirmar password. Validación en tiempo real. Indicador de fortaleza.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Login con JWT y sesión persistente",
+        "description": "Como usuario registrado, quiero iniciar sesión con mis credenciales para acceder a mi panel personal.",
+        "priority": "Highest",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoint POST /api/auth/login",
+            "description": "Validar credenciales, generar JWT (RS256, exp 24h), retornar token + refresh token en httpOnly cookie.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Middleware de validación de JWT para rutas protegidas",
+            "description": "Extraer token del header Authorization: Bearer <token>. Verificar firma, expiración. Inyectar req.user.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/auth/refresh",
+            "description": "Recibir refresh token, validar contra DB, emitir nuevo par de tokens si es válido.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Guardias de ruta con redirección a login",
+            "description": "Proteger rutas privadas. Si no hay token válido, redirigir a /login. Si hay token expirado, intentar refresh.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Formulario de login con manejo de errores",
+            "description": "Mostrar errores específicos: credenciales inválidas, cuenta no verificada, servidor no disponible.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Gestión de Archivos [Fase 1]",
+    "description": "Funcionalidades core de carga, visualización y descarga de archivos con almacenamiento seguro.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Carga de archivos con validación y progreso",
+        "description": "Como usuario autenticado, quiero subir archivos y ver el progreso en tiempo real.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Middleware Multer para upload multipart",
+            "description": "Configurar Multer con destino local, límite 20MB por archivo, filtro de tipos MIME permitidos.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/files/upload",
+            "description": "Recibir archivo, guardar en disco bajo /uploads/{userId}/, registrar metadata en DB.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[FRONTEND] Componente drag-and-drop con barra de progreso",
+            "description": "Área de drop interactiva, validación de tipo/tamaño en cliente, barra de progreso con Axios onUploadProgress.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]

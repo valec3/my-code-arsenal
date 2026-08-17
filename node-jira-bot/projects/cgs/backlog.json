@@ -1,0 +1,305 @@
+[
+  {
+    "summary": "ÉPICA: Core - Carga y Gestión de Archivos [Fase 1: MVP - 1.5 meses]",
+    "description": "Implementar las funcionalidades primordiales del sistema que permiten cargar, almacenar y gestionar metadatos de archivos de manera robusta y segura para el MVP en las primeras 6 semanas.",
+    "priority": "Highest",
+    "stories": [
+      {
+        "summary": "HU: Carga segura y validada de archivos grandes",
+        "description": "Como usuario autenticado, quiero cargar archivos individuales de forma segura validando su extensión y tamaño para almacenarlos en la plataforma.",
+        "priority": "Highest",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Middleware Multer para subidas multipart/form-data",
+            "description": "Crear el middleware de Express usando Multer para recibir transmisiones de archivos de forma síncrona.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Validación estricta de tamaño máximo (20MB) y tipo MIME",
+            "description": "Restringir tipos de archivo peligrosos o prohibidos (ej. .exe, .bat) y bloquear cargas mayores a 20MB para proteger el servidor.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Integración con Axios para barra de progreso en vivo",
+            "description": "Utilizar la propiedad onUploadProgress de Axios para alimentar el estado interactivo del frontend en tiempo real.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Componente drag-and-drop interactivo con animaciones de hover",
+            "description": "Diseñar la interactividad y los estados reactivos del área de arrastre (drag-enter, drag-leave, drop) con transiciones suaves.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[BACKEND] Endpoint de salud (Health check) y logs de subida local",
+            "description": "Registrar en consola o en archivo local información detallada sobre las solicitudes de carga recibidas.",
+            "priority": "Low"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Visualización en grilla y administración interactiva de archivos",
+        "description": "Como usuario, quiero ver una lista ordenada de mis archivos cargados y poder eliminar aquellos que ya no necesito para liberar espacio.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoint GET /api/files para metadatos con paginación",
+            "description": "Desarrollar endpoint GET /files que consulte la base de datos y devuelva ordenadamente los metadatos de los archivos del usuario.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[BACKEND] Endpoint DELETE /api/files/:id con remoción física y lógica",
+            "description": "Crear ruta DELETE /files/:id que remueva el registro en la DB y elimine físicamente el archivo del storage local.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Grilla dinámica con buscador en tiempo real, ordenación y badges de tipo",
+            "description": "Diseñar una grilla interactiva que liste tarjetas de archivos, permitiendo buscar por nombre y filtrar por extensión de forma reactiva.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Integración de modal de confirmación con estado dinámico antes de eliminar",
+            "description": "Crear componente de advertencia interactivo para evitar eliminaciones accidentales de archivos sensibles.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Descarga segura de archivos con enlaces temporales",
+        "description": "Como usuario registrado, quiero generar enlaces seguros y temporales para descargar mis archivos de forma privada.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoint GET /api/files/download/:id con validación de existencia",
+            "description": "Programar endpoint seguro de descarga que valide la pertenencia del archivo antes de disparar la transmisión de datos.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Generación de enlaces de descarga temporales firmados con expiración",
+            "description": "Diseñar lógica criptográfica para firmar enlaces con un hash único y vencimiento automático a los 15 minutos.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Botón de descarga con indicador de carga y control de error en UI",
+            "description": "Agregar animación interactiva de descarga y manejar notificaciones flotantes (toasts) si el enlace ha expirado o falla.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Seguridad - Auth y Aislamiento de Datos [Fase 1: MVP - 1.5 meses]",
+    "description": "Garantizar la protección de accesos y que los archivos cargados estén estrictamente aislados por usuario en la primera fase de 6 semanas.",
+    "priority": "Highest",
+    "stories": [
+      {
+        "summary": "HU: Flujo de Auth robusto con JWT",
+        "description": "Como usuario nuevo, deseo poder registrarme e iniciar sesión de forma segura para tener mi espacio personal protegido en la app.",
+        "priority": "Highest",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[DB] Diseñar esquema de usuario y hasheado de password con bcrypt",
+            "description": "Crear tabla o colección de usuarios aplicando salting y hashing con bcrypt para contraseñas seguras.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/auth/register con validación estricta de formato",
+            "description": "Desarrollar endpoint de registro validando correos legítimos, robustez de contraseñas y unicidad en la base de datos.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/auth/login generando tokens JWT firmados",
+            "description": "Desarrollar endpoint POST /auth/login retornando un JWT válido de corta duración al autenticar.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Middleware Express para validación de sesiones JWT",
+            "description": "Programar middleware de protección global para interceptar cabeceras Authorization, validar el token JWT y denegar accesos inválidos.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[FRONTEND] Gestor de estado (React Context/Redux) para conservar JWT en memoria",
+            "description": "Almacenar de forma segura el token JWT en el estado global para autorizar dinámicamente las llamadas Axios.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Guardias de rutas en frontend para redirección inteligente",
+            "description": "Implementar lógica de protección de rutas privadas redirigiendo al login si no se detecta sesión activa.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Aislamiento absoluto de almacenamiento por inquilino",
+        "description": "Como usuario de la plataforma, quiero estar seguro de que ningún otro usuario tiene acceso a visualizar o modificar mis archivos privados.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[DB] Vinculación relacional de metadatos de archivos con id de usuario",
+            "description": "Agregar clave foránea o relación formal en los metadatos de archivos para asociarlos unívocamente a un userId.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Forzar inyección de userId extraído del JWT en todas las consultas DB",
+            "description": "Asegurar que todas las peticiones a base de datos de archivos filtren de forma no opcional por el ID extraído del JWT.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[DEVOPS] Crear directorios locales segmentados en disco por id de usuario",
+            "description": "Configurar la ruta del sistema de archivos para almacenar los uploads en carpetas físicas aisladas usando el UUID del usuario.",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Integración - Google Calendar API [Fase 1: MVP - 1.5 meses]",
+    "description": "Implementar la conexión y sincronización de eventos de calendario usando la API oficial de Google Calendar en el MVP.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Sincronización y Vinculación con Google OAuth2",
+        "description": "Como usuario, quiero vincular mi cuenta de Google mediante OAuth2 para poder agendar y ver mis eventos de calendario en la aplicación.",
+        "priority": "High",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[INTEGRACION] Configuración de credenciales de Google Developer Console y variables de entorno",
+            "description": "Registrar credenciales OAuth Client ID, Secret y configurar las URIs de redirección permitidas.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint de inicio de flujo OAuth2 para Google Consent Screen",
+            "description": "Crear ruta GET /auth/google que genere y devuelva la URL oficial de consentimiento solicitando los scopes de calendar.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Endpoint de redirección (callback) para intercambio de códigos y tokens",
+            "description": "Crear GET /auth/google/callback para capturar el código temporal, validar el state y solicitar los tokens de Google.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[DB] Almacenamiento seguro de tokens OAuth2 de Google (Access y Refresh)",
+            "description": "Persistir de forma encriptada en la base de datos el refresh_token y el access_token asociados al usuario logueado.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Botón de vinculación con Google Calendar e indicador de estado de conexión",
+            "description": "Diseñar interruptor dinámico que redirija a Google o muestre la cuenta vinculada con opción de desconectar.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Agendamiento automático de eventos de Calendar",
+        "description": "Como usuario, deseo crear eventos directamente desde la app para que se sincronicen de forma instantánea en mi calendario de Google.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[INTEGRACION] Lógica para renovar el Access Token usando el Refresh Token",
+            "description": "Implementar un helper que compruebe la fecha de expiración y renueve automáticamente el token antes de disparar llamadas a la API.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Servicio para crear eventos en Google Calendar llamando a la API oficial",
+            "description": "Encapsular la llamada POST a https://www.googleapis.com/calendar/v3/calendars/primary/events mapeando títulos, fechas y descripciones.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Endpoint POST /api/events para agendar eventos con validación de solapamiento",
+            "description": "Crear endpoint de la app que reciba los datos del evento, valide la disponibilidad horaria y dispare la inserción en Google.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Componente interactivo de calendario para visualización de eventos del MVP",
+            "description": "Integrar un calendario visual interactivo que renderice eventos agendados y permita arrastrar para cambiar horas.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Automatización - WhatsApp API e Historial [Fase 2: Lanzamiento - 3 meses]",
+    "description": "Implementar alertas automáticas mediante WhatsApp API y auditoría de eventos de archivos para el lanzamiento comercial en 3 meses.",
+    "priority": "Medium",
+    "stories": [
+      {
+        "summary": "HU: Notificaciones automáticas de subida por WhatsApp",
+        "description": "Como usuario, quiero recibir una notificación automática en mi WhatsApp cada vez que se suba un archivo importante para tener constancia inmediata.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[INTEGRACION] Configuración del cliente HTTP para conectar con WhatsApp Business API",
+            "description": "Establecer la conexión con el proveedor oficial o API de Meta enviando las credenciales correspondientes.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Servicio para enviar mensajes de texto y plantillas multimedia a teléfonos",
+            "description": "Crear helper reutilizable para enviar mensajes de texto transaccionales basados en plantillas aprobadas.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Disparador (Trigger) asíncrono de alerta por WhatsApp post-upload",
+            "description": "Acoplar un hook asíncrono al endpoint de subidas que despache un recordatorio a WhatsApp tras confirmar el almacenamiento exitoso.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Recordatorios de Google Calendar por WhatsApp",
+        "description": "Como usuario, quiero recibir alertas por WhatsApp 24 horas antes de mis eventos agendados para no perder ninguna cita.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Tarea programada (Cron Job) periódica para eventos cercanos",
+            "description": "Configurar un cron asíncrono (ej. node-cron) que corra cada hora buscando eventos de Google Calendar agendados para el día siguiente.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Servicio de despacho masivo de recordatorios automáticos de Calendar",
+            "description": "Iterar eventos filtrados de los usuarios, validar sus alertas activas y despachar notificaciones formateadas por la API de WhatsApp.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[FRONTEND] Interruptores en la UI para activar o desactivar alertas de WhatsApp",
+            "description": "Añadir controles de configuración interactivos en el perfil para que el usuario gestione sus preferencias de notificaciones.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Historial detallado de auditoría de archivos",
+        "description": "Como usuario, quiero acceder a un registro detallado de las cargas, descargas y eliminaciones de mis archivos para auditar la seguridad de mi cuenta.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[DB] Esquema de base de datos para registrar logs de auditoría",
+            "description": "Crear modelo de DB para logs que almacene userId, acción realizada (upload/download/delete), fileId, timestamp, IP y User-Agent.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[BACKEND] Middleware asíncrono de logging de auditoría en rutas de archivos",
+            "description": "Escribir middleware que intercepte transacciones exitosas de archivos y guarde de fondo el log sin retrasar la respuesta al cliente.",
+            "priority": "Low"
+          },
+          {
+            "summary": "[FRONTEND] Vista de auditoría responsiva con paginador e historial de actividad",
+            "description": "Diseñar panel interactivo donde el usuario liste cronológicamente sus acciones de archivos con filtros de fecha.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,165 @@
+[
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Investigación del Marco Legal Peruano (Ley 29733)",
+        "description": "Investigar y documentar el marco legal de protección de datos personales en el Perú: Ley 29733, su Reglamento DS 003-2013-JUS, derechos ARCO y análisis GAP de cumplimiento del centro médico.",
+        "priority": "Highest",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[INVESTIGACIÓN] Estudiar Ley 29733 y Reglamento DS 003-2013-JUS (principios, obligaciones, sanciones)",
+            "description": "Investigar la Ley N° 29733 (Ley de Protección de Datos Personales) y su Reglamento aprobado por DS 003-2013-JUS. Documentar: principios rectores (legalidad, consentimiento, finalidad, proporcionalidad, calidad, seguridad, disposición de recurso), obligaciones del responsable del banco de datos, categorías de datos (especialmente datos sensibles como los de salud), y régimen de sanciones por incumplimiento.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[INVESTIGACIÓN] Investigar derechos ARCO (Acceso, Rectificación, Cancelación, Oposición) y plazos/procedimientos",
+            "description": "Investigar en detalle los derechos ARCO reconocidos por la Ley 29733: Acceso, Rectificación, Cancelación y Oposición. Documentar: requisitos de la solicitud, plazos de atención (15 días hábiles prorrogables por 10), medio de respuesta, y procedimiento ante la ANPD en caso de denegatoria.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[INVESTIGACIÓN] Ver videos y cursos sobre política de protección de datos personales",
+            "description": "Capacitación mediante videos, webinars y cursos sobre protección de datos personales (material de la ANPD, MINJUSDH y referencias del sector salud). Extraer aprendizajes aplicables al centro médico y documentarlos en la carpeta de investigación.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[ANÁLISIS] Análisis GAP de cumplimiento: qué tenemos hoy vs. qué nos falta",
+            "description": "Realizar análisis GAP de cumplimiento de protección de datos: inventariar lo que el centro médico YA tiene (documentos, procesos, tecnología, registros, consentimientos) vs. lo que exige la Ley 29733. Entregable: matriz GAP con prioridades y responsables.",
+            "priority": "High"
+          },
+          {
+            "summary": "[DOCUMENTACIÓN] Resumen ejecutivo del marco legal aplicable y plan de cumplimiento",
+            "description": "Elaborar documento ejecutivo con: marco legal aplicable (Ley 29733, reglamento, directivas de la ANPD), obligaciones del centro médico como responsable del banco de datos, y plan de cumplimiento priorizado derivado del análisis GAP.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Documentos Legales — Consentimiento de Datos y Política de Privacidad",
+        "description": "Redactar, revisar y aprobar los documentos legales de protección de datos del centro médico: consentimiento informado de datos personales (obligatorio por tratarse de datos sensibles de salud) y política de privacidad, junto con el soporte backend para generarlos y almacenarlos.",
+        "priority": "Highest",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Redactar el Consentimiento Informado de Datos Personales",
+            "description": "Redactar el documento de consentimiento informado de datos personales conforme a la Ley 29733. Los datos de salud son categoría sensible y exigen consentimiento expreso e informado. Debe incluir: finalidad del tratamiento, datos recolectados, transferencias, derechos ARCO, datos del responsable y mecanismo de revocación. Versión en lenguaje claro para el paciente.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[LEGAL] Redactar la Política de Privacidad de Endogastro",
+            "description": "Redactar la política de privacidad del centro médico: identidad del responsable, finalidades del tratamiento, categorías de datos, base legal, transferencias y cesiones, plazos de conservación, derechos ARCO y canal de contacto (privacidad@endogastro.com.pe). Debe cubrir el tratamiento de datos de pacientes en sistema, web y app mobile.",
+            "priority": "High"
+          },
+          {
+            "summary": "[LEGAL] Revisión legal y aprobación final de ambos documentos",
+            "description": "Revisión por abogado/asesor legal de los documentos de consentimiento y política de privacidad. Ajustar conforme a observaciones y aprobar versión final versionada (v1.0) con fecha de vigencia.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Crear módulo/repositorio para generar y almacenar documentos legales",
+            "description": "Crear módulo en el backend (servicio + repositorio) para gestionar documentos legales: plantillas, generación, versionado y almacenamiento de consentimientos y políticas de privacidad. Diseñar esquema de datos para registrar documentos legales generados y asociarlos a pacientes cuando aplique.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint para generar el documento de consentimiento (PDF) con datos del paciente",
+            "description": "Crear endpoint que genere el documento de consentimiento informado de datos personales en PDF, poblado con los datos del paciente (nombres, DNI), fecha, sucursal y versión vigente de la plantilla. Reutilizar infraestructura existente de generación de documentos si aplica.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Endpoint para generar/recuperar la Política de Privacidad vigente",
+            "description": "Crear endpoint para obtener/generar la política de privacidad vigente (versión activa). Permitir consulta pública (web) y consulta desde el sistema. Mantener historial de versiones.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Derechos ARCO y Registro de Banco de Datos ante la ANPD",
+        "description": "Implementar el canal de atención de derechos ARCO (buzón privacidad@endogastro.com.pe + formulario) y gestionar el registro del banco de datos del centro médico ante la Autoridad Nacional de Protección de Datos Personales (ANPD), obligatorio por Ley 29733.",
+        "priority": "High",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Crear y configurar la casilla privacidad@endogastro.com.pe",
+            "description": "Crear la casilla de correo privacidad@endogastro.com.pe en el dominio Endogastro. Configurar: buzón principal, alias, redirecciones, firma estándar, y acceso para el responsable de atención de solicitudes. Definir protocolo de monitoreo diario.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Formulario/endpoint de recepción de solicitudes ARCO",
+            "description": "Crear formulario y/o endpoint para registrar solicitudes de derechos ARCO: datos del titular, tipo de derecho (acceso, rectificación, cancelación, oposición), detalle de la solicitud, medio de respuesta preferido. Registrar fecha/hora de ingreso y estado del trámite para cumplir plazos legales.",
+            "priority": "High"
+          },
+          {
+            "summary": "[DOCUMENTACIÓN] Procedimiento interno de atención de solicitudes ARCO",
+            "description": "Documentar el procedimiento interno de atención de solicitudes ARCO: recepción, verificación de identidad del titular, derivación, respuesta dentro de los 15 días hábiles (prorrogables por 10), registro de seguimiento y casos de denegatoria con fundamento legal.",
+            "priority": "High"
+          },
+          {
+            "summary": "[INVESTIGACIÓN] Investigar el procedimiento de registro de bancos de datos ante la ANPD",
+            "description": "Investigar el procedimiento de registro de bancos de datos personales ante la ANPD: requisitos, formularios, plazos, modalidad presencial/virtual, y qué bancos de datos debe declarar el centro médico (pacientes, personal, proveedores, etc.).",
+            "priority": "High"
+          },
+          {
+            "summary": "[LEGAL] Elaborar la documentación del banco de datos del centro médico",
+            "description": "Elaborar la documentación requerida para el registro del banco de datos: finalidades del tratamiento, categorías de datos, transferencias, medidas de seguridad, encargados de tratamiento, y responsable. Incluir inventario completo de bancos de datos del centro médico.",
+            "priority": "High"
+          },
+          {
+            "summary": "[LEGAL] Presentar/solicitar el registro del banco de datos ante la ANPD",
+            "description": "Presentar la solicitud de registro del banco de datos ante la ANPD conforme al procedimiento oficial. Realizar seguimiento del expediente hasta obtener el registro, y dejar documentado el número de registro y las obligaciones derivadas.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Renovación del Sitio Web de Endogastro",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[WEB] Publicar la Política de Privacidad en el sitio web",
+            "description": "Publicar la Política de Privacidad aprobada en el sitio web de Endogastro (sección institucional o footer con enlace directo). Incluir: página de política de privacidad accesible, fecha de última actualización, y referencia al canal de contacto privacidad@endogastro.com.pe. Coordinar con la HU de renovación del sitio web.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: DevOps e Infraestructura",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Migración de Archivos a Cloudflare R2",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Configurar bucket R2 dedicado para documentos legales (acceso restringido)",
+            "description": "Crear y configurar un bucket R2 de Cloudflare exclusivo para documentos legales (consentimientos firmados, políticas). Configurar: acceso restringido (sin exposición pública), CORS si aplica, retención/versionado de objetos, y credenciales de acceso por API tokens en el backend.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Endpoint de upload del consentimiento escaneado y firmado (PDF) a R2",
+            "description": "Crear endpoint de subida del consentimiento informado escaneado y firmado físicamente por el paciente. Recibir el PDF (multipart), validarlo, subirlo al bucket R2 de documentos legales y asociarlo al paciente y a su registro de consentimiento en la base de datos.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Validación de tipo/tamaño de archivo y trazabilidad del documento",
+            "description": "Validar tipo MIME (PDF) y tamaño máximo del archivo al subir el consentimiento. Registrar trazabilidad: quién subió (usuario autenticado), cuándo (timestamp), versión del documento y hash del archivo para integridad.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] URLs firmadas de acceso/descarga segura al consentimiento",
+            "description": "Implementar generación de URLs firmadas de R2 con expiración para acceder/descargar el consentimiento almacenado. Asegurar que solo usuarios autorizados (personal del centro médico) puedan generar enlaces y que expiren automáticamente.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Vista para subir el consentimiento firmado desde la ficha del paciente",
+            "description": "Agregar en la ficha del paciente (o en el flujo de atención) una sección para subir el consentimiento informado firmado: selector de archivo PDF, indicador de carga, validación de errores y confirmación visual del documento cargado con fecha.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]

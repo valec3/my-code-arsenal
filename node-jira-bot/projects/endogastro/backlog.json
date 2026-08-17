@@ -1,0 +1,493 @@
+[
+  {
+    "summary": "ÉPICA: Anamnesis — Filiación y Programación",
+    "description": "Módulo de anamnesis: registro de filiación del paciente, programación de atenciones, reportes y anatomía. Features base del flujo de ingreso del paciente.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Filiación del Paciente",
+        "description": "Como personal administrativo, necesito registrar los datos de filiación del paciente al momento del ingreso.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Programar Atención",
+        "description": "Como operador, necesito agendar una atención médica para un paciente en un horario disponible.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Reportes de Anamnesis",
+        "description": "Como médico, necesito consultar reportes del historial de anamnesis de mis pacientes.",
+        "priority": "Low",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Anatomía en Anamnesis",
+        "description": "Como médico, necesito registrar hallazgos anatómicos durante la anamnesis del paciente.",
+        "priority": "Low",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Atención Médica — Consulta y Procedimientos",
+    "description": "Flujo completo de atención médica: sala de espera, historial clínico, procedimientos, calendario, anatomía patológica y APIs de soporte. Incluye hotfixes críticos activos.",
+    "priority": "Highest",
+    "stories": [
+      {
+        "summary": "HU: Anatomía Patológica — Procesamiento de Pagos",
+        "description": "Como operador, necesito que el módulo de Anatomía Patológica procese pagos y registros automáticos sin errores que bloqueen la operación.",
+        "priority": "Highest",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Fix Error 500 al procesar pago o registro automático en Anatomía Patológica",
+            "description": "Investigar y resolver causa del error 500. Revisar flujo de procesamiento del pago y registro automático del módulo. Validar que las transacciones se completen sin excepciones no controladas.",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Procedimientos — Generación de Documentos",
+        "description": "Como médico, necesito que los documentos de procedimientos se generen con todos los datos del paciente correctamente poblados.",
+        "priority": "Highest",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Fix en generación de documentos Word: parámetros de paciente se envían vacíos",
+            "description": "Revisar plantilla Word y script que la alimenta. Corregir mapeo de datos del paciente (nombre, DNI, fecha) hacia los placeholders del documento de PROCEDIMIENTOS.",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: APIs de Atención para App Mobile",
+        "description": "Endpoints del backend requeridos por la app mobile para funcionalidades del doctor: consulta de citas del día, sala de espera y generación de link de Google Meet.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoints para funcionalidades mobile del doctor",
+            "description": "Desarrollar o adaptar endpoints: GET /api/doctor/citas (citas del día del médico autenticado), GET /api/doctor/sala-espera (pacientes en espera con estado), POST /api/citas/{id}/generar-meet (generar y retornar link de Google Meet).",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Sala de Espera",
+        "description": "Como médico, necesito visualizar la lista de pacientes en sala de espera con su estado para gestionar el flujo de atención.",
+        "priority": "High",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Buscar Historial Clínico",
+        "description": "Como médico, necesito buscar y consultar el historial clínico completo de un paciente durante la atención.",
+        "priority": "High",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Calendario de Atenciones",
+        "description": "Como médico, necesito un calendario visual con mis atenciones programadas para organizar mi jornada.",
+        "priority": "Medium",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Farmacia — Medicamentos, Stock y Recetas",
+    "description": "Gestión completa del módulo de farmacia: catálogo de productos, stock, recetas y ventas. Incluye mantenimiento de catálogo y flujo de dispensación.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Configuración de Catálogo — Marcas, Proveedores, Presentación y Seguros",
+        "description": "Como administrador de farmacia, necesito gestionar las tablas base del módulo: marcas de medicamentos, proveedores, presentaciones disponibles y seguros con sus coberturas.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Medicamentos — Mantenimiento y Catálogo",
+        "description": "Como administrador de farmacia, necesito gestionar el catálogo de medicamentos con capacidad de activar o desactivar productos.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Añadir campo ACTIVO en el mantenimiento de medicamentos",
+            "description": "Agregar columna o campo visual que muestre el estado ACTIVO/INACTIVO de cada medicamento en la vista de mantenimiento. Debe permitir filtrar por este estado y toggle para cambiar.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Stock — Visualización Web",
+        "description": "Como farmacéutico, necesito visualizar y gestionar el inventario de medicamentos desde la interfaz web.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Gestión de Recetas — Crear y Consultar",
+        "description": "Como médico y farmacéutico, necesito crear recetas digitales para pacientes y consultar el historial de recetas emitidas para validar dispensación.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Recetas — Layout y Diseño",
+        "description": "Como médico, necesito que el formato de receta cumpla con el diseño especificado para impresión y visualización.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Ajustar layout de receta según diseño especificado y lógica de logo 1:1",
+            "description": "Modificar el componente de receta para que cumpla con el diseño aprobado. Implementar lógica de visualización del logo con relación de aspecto 1:1. Validar en diferentes tamaños de pantalla e impresión.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Vender / Dispensar",
+        "description": "Como farmacéutico, necesito registrar la venta y dispensación de medicamentos al paciente.",
+        "priority": "Medium",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Laboratorio — Exámenes y Análisis",
+    "description": "Gestión del módulo de laboratorio: configuración, catálogo de exámenes, inventario, creación y programación de análisis. Incluye automatización del flujo de laboratorio.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Configuración y Catálogo — Marcas, Proveedores, Tipos de Examen, Seguros, Exámenes y Stock",
+        "description": "Como administrador de laboratorio, necesito gestionar las tablas base del módulo: marcas de insumos, proveedores, tipos de examen, seguros, catálogo de exámenes y control de inventario de reactivos.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Gestión de Análisis — Crear y Programar",
+        "description": "Como profesional de laboratorio, necesito registrar órdenes de análisis para pacientes y programar análisis pendientes en el calendario del laboratorio.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Recetas de Examen — Consulta de Resultados",
+        "description": "Como médico, necesito consultar las recetas y resultados de exámenes de laboratorio de mis pacientes.",
+        "priority": "Low",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Sistematización y Automatización del Flujo de Laboratorio",
+        "description": "Como director de laboratorio, necesito que el flujo completo esté automatizado: recepción de órdenes, asignación de pruebas, registro de resultados y notificación al médico.",
+        "priority": "Medium",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Endpoint para Sistematización de Laboratorio",
+            "description": "Desarrollar el módulo backend que automatice el flujo de laboratorio: recepción de órdenes, asignación de pruebas, registro de resultados y notificación al médico solicitante.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Caja y Facturación",
+    "description": "Módulo de caja: gestión de órdenes de pago, facturación, horarios de facturación y notas de crédito.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Órdenes de Caja",
+        "description": "Como cajero, necesito gestionar las órdenes de pago de los pacientes por servicios y productos.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Parametrización de Facturación y Notas de Crédito",
+        "description": "Como administrador, necesito configurar los parámetros de facturación, horarios permitidos y flujo de notas de crédito.",
+        "priority": "Medium",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Lógica de parametrización de Facturación, Horarios de Facturación y Notas de Crédito",
+            "description": "Implementar lógica de negocio para configurar: tipos de comprobante, series, tasas de impuestos, horarios permitidos para facturación, y flujo de generación de notas de crédito con trazabilidad completa.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "description": "Funcionalidades centrales de administración: usuarios, profesionales, reportes, dashboard, catálogos clínicos, CIE-10, atenciones, landing page y configuración general del sistema.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Usuarios y Profesionales de Salud",
+        "description": "Como administrador, necesito gestionar usuarios con roles específicos para profesionales de salud (médicos, enfermeros, técnicos).",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Integrar lógica de user data y roles para profesionales de salud",
+            "description": "Diseñar e implementar estructura de datos para profesionales de salud (especialidad, número de colegiatura, horarios). Integrar con sistema de roles. Crear endpoints CRUD para gestión de profesionales y asignación de roles.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Búsqueda y Diagnóstico (CIE-10)",
+        "description": "Como médico, necesito buscar diagnósticos por código CIE-10 y palabras clave durante la atención, no solo por nombre.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Ampliar búsqueda de diagnósticos por código CIE-10 y palabras clave",
+            "description": "Extender filtro de búsqueda para aceptar código CIE-10 y palabras clave además del nombre. Implementar búsqueda combinada con debounce y sugerencias en tiempo real.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Integrar vistas e indicaciones para revisión médica en plantillas",
+            "description": "Agregar sección de indicaciones y vistas requeridas en las plantillas de atención. Permitir al médico marcar revisiones pendientes y registrar observaciones.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Atenciones — Mejoras de Interfaz",
+        "description": "Como médico, necesito una interfaz de atención más clara con identificación visual de la atención activa y campos sin restricciones arbitrarias.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Agregar flag o distintivo visual para identificar la atención activa",
+            "description": "Implementar distintivo visual (badge, indicador de color, borde resaltado) que permita al médico identificar de un vistazo cuál es la atención actualmente en curso.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Ajustar recomendaciones predefinidas a formato A10 y eliminar límite MAX_LENGTH",
+            "description": "Migrar formato de recomendaciones predefinidas al estándar A10. Eliminar restricción de caracteres (MAX_LENGTH) en textarea/inputs de recomendaciones para permitir texto de longitud ilimitada.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Especialidades — Ordenamiento y Filtros",
+        "description": "Como administrador, necesito gestionar especialidades médicas con ordenamiento, filtros dinámicos y activación/desactivación.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Implementar sort, filtros dinámicos y toggle de campo activo en Especialidades",
+            "description": "Agregar ordenamiento por columnas (sort) en tabla de especialidades. Implementar filtros dinámicos por nombre y estado. Añadir columna con toggle para activar/desactivar especialidades.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Programación y Horarios",
+        "description": "Como administrador, necesito configurar las columnas de la tabla de programación y extender el horario de atención.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Ajustar columnas de Programación a: DNI | Paciente | Servicio | Estado | Sucursal",
+            "description": "Reconfigurar las columnas de la tabla de programación para mostrar exclusivamente: DNI, Paciente, Servicio, Estado y Sucursal. Ocultar o eliminar columnas no relevantes.",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[FRONTEND] Extender selector de horarios para permitir reservas y atención hasta las 9:00 PM",
+            "description": "Modificar lógica del selector de horarios para extender el rango disponible hasta las 9:00 PM (21:00). Ajustar validaciones de solapamiento para contemplar el nuevo horario límite.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Sucursales y Kardex",
+        "description": "Como administrador, contador o gerente, necesito consultar el kardex filtrado por sucursal para auditar movimientos de inventario.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[BD] Habilitar consulta y permisos de Kardex por Sucursal para Admin, Contador y Gerente",
+            "description": "Crear o ajustar query SQL de kardex para soportar filtro por sucursal. Configurar permisos de inicialización y lectura para roles Administrador, Contador y Gerente. Validar que otros roles no tengan acceso.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Landing Page de Endogastro",
+        "description": "Página web informativa del sistema Endogastro y su app mobile: features, enlaces de descarga a App Store y Google Play, y formulario de contacto.",
+        "priority": "Low",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Diseñar y publicar landing page de Endogastro",
+            "description": "Crear landing page responsive con: presentación del sistema, sección de features, badges de descarga App Store / Google Play, preguntas frecuentes, formulario de contacto. Hostear en el dominio del proyecto o subdominio.",
+            "priority": "Low"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Reportes y Dashboard",
+        "description": "Como administrador, necesito consultar reportes financieros y un dashboard con indicadores clave del sistema.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Catálogos Clínicos — Procedimientos y Plantillas de Recetas",
+        "description": "Como administrador, necesito gestionar el catálogo de procedimientos médicos y las plantillas de recetas predefinidas para los médicos.",
+        "priority": "Low",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Tickets y Órdenes",
+        "description": "Como administrador, necesito gestionar tickets y órdenes generadas en el sistema.",
+        "priority": "Low",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Migración de Datos Legacy",
+    "description": "Migración de datos desde la base de datos legacy a la nueva estructura. Incluye fotografías y datos históricos. Ventana planificada: Jun 13 - Jun 15.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Migración de Base de Datos y Fotografías",
+        "description": "Como encargado de sistemas, necesito migrar todos los datos desde la BD legacy sin pérdida de información y con validación de integridad.",
+        "priority": "High",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[BD] Script de migración de fotografías y base de datos legacy a nueva estructura",
+            "description": "Desarrollar script de migración que transfiera fotografías (blobs o archivos) y datos desde BD legacy al nuevo esquema. Debe incluir validación de integridad post-migración, manejo de errores con rollback y logging detallado.",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: App Mobile — iOS y Android (Pacientes + Doctores)",
+    "description": "Aplicación mobile unificada para iOS y Android compartida entre pacientes y doctores. Actualmente existe la versión de pacientes. Se planifica incorporar las features de doctor y funcionalidades transversales. No incluye backend, deploy ni landing page — solo desarrollo frontend mobile.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Portal del Paciente — Reserva de Citas (existente)",
+        "description": "Como paciente, necesito buscar y reservar citas médicas disponibles desde la app seleccionando especialidad, médico, sucursal y horario. Ya implementada y en producción.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Portal del Paciente — Consulta de Informes Médicos (existente)",
+        "description": "Como paciente, necesito consultar los resultados de mis informes de patología, procedimientos y laboratorio desde la app. Ya implementada y en producción.",
+        "priority": "Medium",
+        "tasks": []
+      },
+      {
+        "summary": "HU: Panel del Doctor — Listado de Citas Programadas (nuevo)",
+        "description": "Como médico, necesito ver en la app el listado de mis citas programadas del día con datos del paciente, horario y estado para organizar mi jornada desde el celular.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[MOBILE] Implementar vista de citas programadas del día para el doctor",
+            "description": "Desarrollar pantalla en la app que consuma el endpoint de citas del médico logueado. Mostrar: hora, nombre del paciente, DNI, servicio, estado (pendiente/en curso/atendido). Con pull-to-refresh y filtro por fecha.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Panel del Doctor — Sala de Espera (nuevo)",
+        "description": "Como médico, necesito réplica del flujo de Sala de Espera en la app: ver pacientes en espera, en atención y atendidos, con capacidad de llamar al siguiente paciente.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[MOBILE] Replicar flujo de Sala de Espera en la app",
+            "description": "Desarrollar vista de Sala de Espera mobile que replique el flujo web: lista de pacientes segmentada por estado (en espera, en atención, atendidos). Incluir acción de llamar siguiente paciente y cambiar estado.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Panel del Doctor — Link de Cita Virtual con Google Meet (nuevo)",
+        "description": "Como médico, necesito generar y compartir un enlace de Google Meet para consultas virtuales desde la app, sin videollamada integrada — solo la generación y copia del link.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[MOBILE] Generar y compartir link de Google Meet para cita virtual",
+            "description": "Implementar botón en la ficha de cita que genere un link de Google Meet (usando el endpoint del backend). Permitir copiar al portapapeles y compartir vía WhatsApp/mensajería nativa del SO.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Autenticación Unificada — Login y Registro",
+        "description": "Como usuario (paciente o doctor), necesito autenticarme en la app con mis credenciales del sistema Endogastro. Flujo de login, registro de pacientes nuevos y recuperación de contraseña.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": []
+      },
+      {
+        "summary": "HU: Notificaciones Push — Recordatorios y Resultados",
+        "description": "Como paciente y doctor, necesito recibir notificaciones push en el celular para recordatorios de citas, resultados de exámenes disponibles y alertas importantes.",
+        "priority": "Medium",
+        "storyPoints": 5,
+        "tasks": []
+      },
+      {
+        "summary": "HU: Filtros de Visualización y Perfil de Usuario",
+        "description": "Funcionalidades transversales: filtros condicionales de visualización (stock cero en mobile vs web), pantalla de perfil con datos del usuario y opción de cerrar sesión.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[MOBILE] Filtro condicional: ocultar medicamentos con stock cero solo en mobile",
+            "description": "Implementar lógica condicional que oculte medicamentos con stock igual a cero exclusivamente en la app mobile. La vista web debe seguir mostrando todos los medicamentos sin filtrar por stock.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: DevOps e Infraestructura",
+    "description": "CI/CD, despliegues y configuración de entornos. Publicación de la app mobile en stores, pipelines de build y testing, y configuración de infraestructura.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Deploy y Publicación en App Store (iOS)",
+        "description": "Proceso de build, firma, empaquetado y publicación de la app Endogastro Mobile en Apple App Store Connect.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Build, firma y publicación en App Store Connect (iOS)",
+            "description": "Configurar certificados de firma y provisioning profiles en Apple Developer. Generar build de producción (.ipa). Subir a App Store Connect vía Transporter o fastlane. Configurar metadatos, screenshots y categorías. Gestionar revisión de Apple.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Deploy y Publicación en Google Play (Android)",
+        "description": "Proceso de build, firma, empaquetado y publicación de la app Endogastro Mobile en Google Play Console.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Build, firma y publicación en Google Play Console (Android)",
+            "description": "Generar keystore de firma. Crear Android App Bundle (.aab) firmado. Subir a Google Play Console. Configurar ficha de la app: descripción, screenshots, clasificación de contenido. Gestionar lanzamiento en tracks (internal test → production).",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: CI/CD — Pipelines de Build y Testing",
+        "description": "Automatización de builds, testing y despliegue continuo para la app mobile y el backend. Integración con GitHub Actions o similar.",
+        "priority": "Medium",
+        "tasks": []
+      }
+    ]
+  }
+]

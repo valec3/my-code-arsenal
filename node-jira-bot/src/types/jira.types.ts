@@ -14,6 +14,7 @@ export interface BacklogStory {
   priority?: string;
   storyPoints?: number;
   tasks?: BacklogTask[];
+  existingStoryKey?: boolean;
 }
 
 export interface BacklogEpic {
@@ -21,6 +22,7 @@ export interface BacklogEpic {
   description?: string;
   priority?: string;
   stories?: BacklogStory[];
+  existingEpicKey?: boolean;
 }
 
 // ==============================================================================
@@ -52,7 +54,10 @@ export interface JiraCreateIssueFields {
   parent?: {
     key: string;
   };
-  [key: string]: any; // Permite extensiones futuras
+  priority?: {
+    name: string;
+  };
+  [key: string]: any; // Permite extensiones futuras (ej: story points)
 }
 
 export interface JiraCreateIssuePayload {
@@ -67,4 +72,13 @@ export interface JiraCreateIssueResponse {
   id: string;
   key: string;
   self: string;
+}
+
+export interface JiraIssueSummary {
+  key: string;
+  summary: string;
+  issuetype: string;
+  priority: string;
+  status: string;
+  parent: string | null;
 }

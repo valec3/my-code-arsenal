@@ -1,16 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
-import { env } from '../config/env';
+import { EnvConfig, env } from '../config/env';
 import { convertPlaintextToADF } from '../utils/adf';
-import { JiraCreateIssuePayload, JiraCreateIssueResponse } from '../types/jira.types';
+import { JiraCreateIssuePayload, JiraCreateIssueResponse, JiraIssueSummary } from '../types/jira.types';
 
 export class JiraService {
   private client: AxiosInstance;
+  private config: EnvConfig;
 
-  constructor() {
-    const authHeader = Buffer.from(`${env.JIRA_USER_EMAIL}:${env.JIRA_API_TOKEN}`).toString('base64');
+  constructor(config: EnvConfig) {
+    this.config = config;
+    const authHeader = Buffer.from(`${config.JIRA_USER_EMAIL}:${config.JIRA_API_TOKEN}`).toString('base64');
     
     this.client = axios.create({
-      baseURL: `${env.JIRA_HOST.replace(/\/$/, '')}/rest/api/3`,
+      baseURL: `${config.JIRA_HOST.replace(/\/$/, '')}/rest/api/3`,
       headers: {
         'Authorization': `Basic ${authHeader}`,
         'Accept': 'application/json',
@@ -57,7 +59,7 @@ export class JiraService {
     const payload: JiraCreateIssuePayload = {
       fields: {
         project: {
-          key: env.JIRA_PROJECT_KEY
+          key: this.config.JIRA_PROJECT_KEY
         },
         summary: summary,
         description: convertPlaintextToADF(description),
@@ -68,7 +70,7 @@ export class JiraService {
     };
 
     // Si se provee un parentKey, se inyecta en los fields del payload para asociarlo.
-    // Esto vincula automáticamente una Story a una Epic, o una Subtarea a una Story.
+    // Vincula una Story/Task a una Epic, o una Subtarea a una Story/Task.
     if (parentKey) {
       payload.fields.parent = {
         key: parentKey
@@ -84,7 +86,7 @@ export class JiraService {
 
     // Inyectar Estimación de Puntos de Historia si se especifica y el tipo es numérico
     if (storyPoints !== undefined && storyPoints !== null) {
-      payload.fields[env.JIRA_STORY_POINTS_FIELD] = storyPoints;
+      payload.fields[this.config.JIRA_STORY_POINTS_FIELD] = storyPoints;
     }
 
     try {
@@ -122,14 +124,58 @@ export class JiraService {
     try {
       const response = await this.client.get('/search/jql', {
         params: {
-          jql: `project = "${env.JIRA_PROJECT_KEY}"`,
-          maxResults: 150, // Límite amplio para limpiezas de backlog medianos
+          jql: `project = "${this.config.JIRA_PROJECT_KEY}"`,
+          maxResults: 150,
           fields: 'key'
         }
       });
       const data = response.data || {};
       const list = Array.isArray(data.results) ? data.results : (Array.isArray(data.issues) ? data.issues : []);
       return list.map((issue: any) => issue.key);
+    } catch (error: any) {
+      throw new Error(this.parseError(error));
+    }
+  }
+
+  async findIssueBySummary(summary: string): Promise<{ key: string; id: string } | null> {
+    try {
+      const jql = `project = "${this.config.JIRA_PROJECT_KEY}" AND summary ~ "${summary.replace(/"/g, '\\"')}"`;
+      const response = await this.client.get('/search/jql', {
+        params: {
+          jql,
+          maxResults: 1,
+          fields: 'key'
+        }
+      });
+      const issues = response.data?.issues || [];
+      if (issues.length > 0) {
+        return { key: issues[0].key, id: issues[0].id };
+      }
+      return null;
+    } catch (error: any) {
+      throw new Error(this.parseError(error));
+    }
+  }
+
+  async getProjectIssues(): Promise<JiraIssueSummary[]> {
+    try {
+      const response = await this.client.get('/search/jql', {
+        params: {
+          jql: `project = "${this.config.JIRA_PROJECT_KEY}" ORDER BY issuetype ASC, key ASC`,
+          maxResults: 200,
+          fields: 'summary,issuetype,priority,status,parent'
+        }
+      });
+      const data = response.data || {};
+      const list = Array.isArray(data.issues) ? data.issues : (Array.isArray(data.values) ? data.values : []);
+      return list.map((issue: any) => ({
+        key: issue.key,
+        summary: issue.fields?.summary || '(sin título)',
+        issuetype: issue.fields?.issuetype?.name || 'Desconocido',
+        priority: issue.fields?.priority?.name || '—',
+        status: issue.fields?.status?.name || 'Desconocido',
+        parent: issue.fields?.parent?.key || null
+      }));
     } catch (error: any) {
       throw new Error(this.parseError(error));
     }
@@ -159,4 +205,4 @@ export class JiraService {
   }
 }
 
-export const jiraService = new JiraService();
+export const jiraService = new JiraService(env);

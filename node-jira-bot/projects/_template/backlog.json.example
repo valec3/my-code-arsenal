@@ -1,0 +1,27 @@
+[
+  {
+    "summary": "ÉPICA: Nombre de la Épica",
+    "description": "Descripción detallada del objetivo de esta épica.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Nombre de la Historia de Usuario",
+        "description": "Como [rol], quiero [funcionalidad] para [beneficio].",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "Subtarea: Acción concreta a realizar",
+            "description": "Detalle técnico de la implementación requerida.",
+            "priority": "High"
+          },
+          {
+            "summary": "Subtarea: Otra tarea necesaria",
+            "description": "Segundo paso técnico para completar la HU.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]
