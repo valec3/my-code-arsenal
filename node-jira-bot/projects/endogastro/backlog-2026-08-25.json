@@ -1,0 +1,90 @@
+[
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Renovación del Sitio Web de Endogastro",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Revisar código de Anthony para el rediseño de la web/landing",
+            "description": "Revisar y validar el código desarrollado por Anthony para el rediseño de la web/landing de Endogastro. Verificar calidad, estructura, responsive, consistencia con el diseño aprobado y integración con el sistema existente. Corregir observaciones y aprobar para producción.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Integración de Proveedor de Validación de DNI y RUC",
+        "description": "Como administrador o personal de admisión, necesito integrar un proveedor externo de servicios para la validación y consulta automática de DNI y RUC de pacientes, mejorando la velocidad y exactitud del registro de filiación.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[BACKEND] Integrar servicio externo de validación de DNI/RUC",
+            "description": "Desarrollar endpoint o módulo backend que consuma la API del proveedor de servicios de identidad (DNI/RUC). Implementar lógica de consulta, cacheo de resultados y manejo de errores. Exponer endpoint propio para el frontend.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Implementar flujo de validación de DNI/RUC en formularios de paciente",
+            "description": "Agregar campo de DNI/RUC con botón de validación o autocompletado que invoque el servicio backend. Mostrar datos retornados (nombre, dirección, estado) y permitir confirmar o editar. Aplicar en formulario de filiación y edición de paciente.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Corregir Error en Edición de Paciente",
+        "description": "Como personal administrativo, necesito que el formulario de edición de paciente permita modificar todos los campos sin restricciones. Actualmente ciertos campos no se pueden editar, lo que impide actualizar información del paciente.",
+        "priority": "Highest",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Revisar y habilitar campos bloqueados en endpoint de edición de paciente",
+            "description": "Investigar por qué algunos campos del paciente no se actualizan al enviar el formulario de edición. Revisar el endpoint PUT/PATCH de paciente: validaciones de backend, schema de la BD y permisos. Asegurar que todos los campos editables se persistan correctamente.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[FRONTEND] Revisar formulario de edición de paciente — campos deshabilitados",
+            "description": "Auditar el formulario de edición de paciente en el frontend. Identificar campos que estén deshabilitados, readonly o que no se envíen en el payload. Habilitar todos los campos editables y validar que el payload incluya la totalidad de campos del formulario.",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Organización de Tareas y Scopes (Gestión)",
+        "description": "Como líder de proyecto o product owner, necesito organizar y documentar las tareas, scopes y prioridades del proyecto Endogastro para mantener alineado al equipo y garantizar la trazabilidad del trabajo.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[GESTION] Documentar scopes, prioridades y asignación de tareas del sprint actual",
+            "description": "Revisar el backlog actual, definir scopes claros por tarea, asignar responsables y establecer prioridades de entrega. Generar documento de referencia o tablero actualizado con el estado de cada item.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Caja y Facturación",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Corregir Boletas y Facturas Reportadas como Fallidas (25/08/2026)",
+        "description": "Como cajero o administrador, necesito que las boletas y facturas que fueron reportadas como fallidas el día 25/08/2026 sean revisadas, corregidas y reincorporadas al sistema correctamente.",
+        "priority": "Highest",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Investigar y corregir causas de facturas/boletas fallidas del 25/08/2026",
+            "description": "Revisar logs del backend y base de datos para identificar la causa raíz de las facturas y boletas que fallaron el 25/08/2026. Verificar si fue error de conexión con SUNAT, timeout, error de serialización o problema de estado. Corregir el root cause y reintentar el envío de los comprobantes afectados.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[BACKEND] Generar reporte de comprobantes fallidos y estado de reintento",
+            "description": "Generar listado de todos los comprobantes (boletas/facturas) que fallaron el 25/08/2026, mostrando: número de comprobante, paciente, monto, causa del error y estado actual (pendiente de reintento / reintegrado / requiere anulación).",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  }
+]

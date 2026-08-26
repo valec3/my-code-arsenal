@@ -1,0 +1,354 @@
+[
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Documentos Legales — Consentimiento de Datos y Política de Privacidad",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Firma de aprobación del Lote 1 documental por el Titular-Gerente",
+            "description": "Obtener la firma de PORTILLO CAZORLA JOSEPH RAUL en la hoja de aprobación APROB-LOTE-001-2026 (governance/Documentation/Document-Approval-Sheet/). Los 7 documentos del Lote 1 (Política 0001-P, Aviso de Privacidad 0002-P, Procedimiento ARCO 0001-T, Consentimiento 0001-C v1.1.0 y 4 Formularios ARCO 0001-0004-F) ya están revisados y pasan a Aprobado/Publicado al momento de la firma. Actualizar el Registro de Control Documental (0001-2026-R-ENDO).",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Derechos ARCO y Registro de Banco de Datos ante la ANPD",
+        "existingStoryKey": true,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Completar el registro de los 8 bancos de datos ante la APDP",
+            "description": "Dejar registro verificado en data/convenciones/registro-bancos-datos.md y data/bancos-datos.json de los 8 bancos inscritos ante la APDP: PACIENTES (PJ-2026-4030/MOD-2026-1559), TRABAJADORES (PJ-2026-4069), PROVEEDORES (PJ-2026-4070), VIDEOVIGILANCIA (PJ-2026-4067), QUEJAS Y RECLAMOS (PJ-2026-4068), USUARIOS DE LA PAGINA WEB (PJ-2026-4546), CLIENTES (PJ-2026-4097) y PROSPECTO DE CLIENTES (PJ-2026-4098). Registrar constancias y fechas de inscripción para acreditar cumplimiento.",
+            "priority": "High"
+          },
+          {
+            "summary": "[DOCUMENTACIÓN] Implementar log de solicitudes ARCO",
+            "description": "Implementar registro físico o digital de solicitudes ARCO que permita acreditar los plazos de atención (información 8 días, acceso 20 días, rectificación/cancelación/oposición 10 días; suspensión 7 días Art. 70 y ampliación Art. 71 del D.S. 016-2024-JUS). Incluir: fecha de ingreso, derecho solicitado, titular, verificaciones de identidad, medio de respuesta y fecha de resolución. Riesgo legal: potencial grave (Art. 133.1, S/ 27,500 a 275,000) si no se puede acreditar la atención.",
+            "priority": "Highest"
+          },
+          {
+            "summary": "[DOCUMENTACIÓN] Mantener inventario de bancos de datos actualizado",
+            "description": "Mantener al día data/convenciones/registro-bancos-datos.md y data/bancos-datos.json ante cualquier alta, baja o modificación de bancos de datos. El inventario es la base para acreditar inscripción ante la APDP y para las declaraciones de flujos de tratamiento.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Designación y Comunicación del Oficial de Protección de Datos",
+        "description": "Cerrar el ciclo de designación del Oficial de Protección de Datos Personales (VICTOR RAUL MAYE MAMANI): documento 0007-2026-R-ENDO ya creado y firmado por el gerente. Falta la comunicación obligatoria a la ANPD.",
+        "priority": "Highest",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Comunicar la designación del OPD a la ANPD dentro de los 15 días",
+            "description": "Comunicar la designación del Oficial de Protección de Datos Personales a la ANPD/DGTAIPD dentro de los 15 días de la firma del documento 0007-2026-R-ENDO (firmado el 10/08/2026), conforme al art. 37.5 del D.S. 016-2024-JUS. Documentar constancia de envío y respuesta. Riesgo legal: leve (Art. 132.9, S/ 2,750 a 27,500).",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Clasificación de Datos y Evidencia de Controles de Seguridad",
+        "description": "Cumplir el punto 4 del checklist de protección de datos: definir la clasificación de datos y acreditar que los controles de la Sección 10 de la Política están implementados.",
+        "priority": "High",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Definir clasificación de datos (Público, Interno, Confidencial, Restringido)",
+            "description": "Elaborar el documento de clasificación de datos con las categorías Público, Interno, Confidencial y Restringido, aplicables a los datos personales que trata Endogastro. Sin clasificación no se pueden asegurar las medidas de seguridad adecuadas. Riesgo legal: leve (Art. 132.6, S/ 2,750 a 27,500); muy grave si afecta datos sensibles con perjuicio (Art. 134.4).",
+            "priority": "High"
+          },
+          {
+            "summary": "[DOCUMENTACIÓN] Evidenciar la implementación de los controles de seguridad",
+            "description": "Recopilar evidencia de que los controles definidos en la Sección 10 de la Política de Protección de Datos están implementados: logs de acceso, configuraciones de cifrado, registros de auditoría, control de accesos. Almacenar en governance/Compliance/Evidence/. Riesgo legal: leve (Art. 132.6); muy grave si afecta datos sensibles con perjuicio (Art. 134.4).",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Capacitación y Sensibilización en Protección de Datos",
+        "description": "Capacitar al personal de Endogastro en protección de datos personales y registrar la evidencia (asistencia, material, evaluaciones).",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Plan de capacitación y registro de evidencia al personal",
+            "description": "Diseñar y ejecutar capacitación al personal sobre Ley 29733, datos sensibles, derechos ARCO y uso de canales seguros. Guardar evidencia: registro de asistencia, materiales y evaluaciones. Riesgo legal: indirecto, fortalece el supuesto de tratamiento sin medidas (Art. 132.6).",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Revisión Periódica del Cumplimiento",
+        "description": "Definir un mecanismo de revisión periódica del cumplimiento de protección de datos como respaldo ante fiscalizaciones.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Definir mecanismo de revisión periódica del cumplimiento",
+            "description": "Definir proceso y periodicidad de revisión del cumplimiento (por ejemplo semestral) con responsables y entregables. Su ausencia debilita la defensa ante una fiscalización (criterio de graduación Art. 230.3 Ley 27444).",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Respuesta a Brechas de Datos Personales",
+        "description": "Completar el marco de respuesta a brechas: procedimiento y formato ya documentados. Falta preparar el flujo operativo de notificación a la ANPD.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Aprobar procedimiento de respuesta a brechas y formato de registro",
+            "description": "Cerrar revisión y aprobación del Procedimiento de Respuesta a Brechas (0002-2026-T-ENDO, governance/Procedures/Data-Breach-Response.md) y del Formato de Registro de Brechas (0005-2026-F-ENDO, templates/Forms/Security-Breach-Log.md).",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[LEGAL] Preparar flujo de notificación de brechas a la ANPD",
+            "description": "Definir flujo operativo de qué notificar, a quién y en qué plazo ante una brecha de datos personales (conforme al D.S. 016-2024-JUS). Aplicará solo si ocurre un incidente, pero el flujo debe estar listo. Riesgo legal: no comunicar un incidente cuando corresponda es leve (Art. 132.12, S/ 2,750 a 27,500).",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Contratos y Encargados de Tratamiento",
+    "description": "Cierre de contratos y acuerdos de encargado de tratamiento (DPA) con proveedores y colaboradores, exigidos por el Art. 30 de la Ley N° 29733. Incluye NDA, contratos de empleados y gestión de proveedores.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: DPA — Laboratorio de Patología (Dra. Hellen Gordillo)",
+        "description": "Suscripción del contrato de encargado de tratamiento con el laboratorio de patología. Borrador 0004-2026-K-ENDO generado el 11/08/2026.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Revisión legal y suscripción del DPA con el laboratorio de patología",
+            "description": "Revisar y firmar el Contrato de Encargado de Tratamiento 0004-2026-K-ENDO (contracts/Suppliers/Laboratory-Services-Agreement-Gordillo/Encargado-de-Tratamiento-Gordillo.md) junto con el contrato de locación 0003-2026-K-ENDO. Servicio nacional (Puno → Lima), sin anexo de transferencia internacional. Política de canales: email-only para datos clínicos; WhatsApp solo coordinación logística. Registrarlo en el control documental. Sin contrato el titular responde por el encargado (Art. 30 Ley).",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: DPA — KOMMO (QSOFT LLC)",
+        "description": "Suscripción/verificación del acuerdo de encargado de tratamiento con KOMMO, CRM de terceros. Borrador 0002-2026-K-ENDO listo, bloqueado por datos pendientes de QSOFT LLC.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Solicitar a QSOFT LLC los datos para completar el DPA de KOMMO",
+            "description": "Solicitar a KOMMO/QSOFT LLC los datos requeridos (razón social, ubicación de servidores, representante) para completar el Contrato de Encargado de Tratamiento 0002-2026-K-ENDO. Bloqueo actual desde 11/08/2026.",
+            "priority": "High"
+          },
+          {
+            "summary": "[LEGAL] Revisión legal y suscripción del DPA de KOMMO + evaluación de flujo transfronterizo",
+            "description": "Una vez recibidos los datos de QSOFT LLC: revisión legal, incorporación del Anexo Modelo de Transferencia Internacional (RD 074-2022) y suscripción. Confirmar ubicación del servidor para evaluar si corresponde comunicar flujo transfronterizo a la DGTAIPD. Riesgo legal: leve (Art. 132.8, S/ 2,750 a 27,500).",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: NDA y Confidencialidad de Software",
+        "description": "Documento de confidencialidad para colaboradores y terceros que acceden a sistemas e información de Endogastro. Documento ya generado.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Revisar y suscribir el NDA de confidencialidad de software",
+            "description": "Revisar y hacer suscribir el NDA (contracts/NDA/NDA-Software-Confidentiality.md) por colaboradores y terceros con acceso a los sistemas e información. Registrar en el control documental.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Contratos de Empleados y Colaboradores",
+        "description": "Contratos laborales y de colaboración asociados a personal con acceso a datos: contador, practicantes y plantilla de locación de servicios.",
+        "priority": "Medium",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[LEGAL] Contrato de locación de servicios — Contador (Jean Carlo Loza Quiza)",
+            "description": "Cerrar revisión y suscripción del Contrato de Locación de Servicios 0005-2026-K-ENDO (contracts/Employees/LOZA-QUIZA-JEAN-CARLO/).",
+            "priority": "Medium"
+          },
+          {
+            "summary": "[LEGAL] Convenio de prácticas preprofesionales — Dueñas Ramos Eduabel",
+            "description": "Cerrar revisión y suscripción del convenio de prácticas preprofesionales (contracts/Employees/DUEÑAS-RAMOS-EDUABEL/).",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Registro de Control Documental",
+        "description": "Mantener el Registro de Control Documental (0001-2026-R-ENDO) como fuente de verdad de autenticidad, versión y estado de cada documento oficial.",
+        "priority": "Medium",
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Actualizar el Registro de Control Documental con cada documento aprobado",
+            "description": "Mantener governance/Documentation/Document-Control-Register.md actualizado: estados, versiones, fechas de aprobación y revistas de todos los documentos oficiales (políticas, procedimientos, formularios, contratos y DPAs). Actualizar historial de versiones y registro de aprobaciones al cerrar cada firma.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Seguridad de la Información y Control de Acceso",
+    "description": "Controles de acceso y evidencias de seguridad exigidos para el tratamiento de datos personales: control de accesos, roles, evidencias de DPAs con proveedores cloud e higiene de datos en herramientas personales.",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Control de Accesos y Roles (RBAC)",
+        "description": "Registro de control de accesos y modelo de roles para acceso a datos personales. Documentos ya generados; falta su aplicación y revisión.",
+        "priority": "High",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[SEGURIDAD] Instrumentar el Registro de Control de Accesos (0003-2026-R-ENDO)",
+            "description": "Instrumentar y mantener governance/Security/Access-Control-Register.md y el modelo RBAC (security/Access-Control/Role-Based-Access-Control.md): altas/bajas de usuarios, revisión de accesos y registro de la evidencia de aplicación en el sistema.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Evidencias de DPAs con Proveedores Cloud",
+        "description": "Guardar evidencias de los acuerdos de encargado de tratamiento con proveedores cloud (Google Cloud SCCs, Cloudflare DPA, Apple).",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Guardar evidencia de DPA de Firebase/Google Cloud",
+            "description": "Capturar y guardar la evidencia documental del DPA de Firebase/Google Cloud (SCCs) en governance/Compliance/Evidence/. Complementar las evidencias ya presentes de Google Cloud, Cloudflare y Apple Developer. Riesgo legal: bajo (DPA vigente, falta solo la evidencia documental).",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Higiene de Datos en Herramientas Personales",
+        "description": "Eliminar datos personales de pacientes de herramientas personales (Google Sheets de cuentas personales). Protege datos sensibles de salud fuera de los canales controlados.",
+        "priority": "Highest",
+        "storyPoints": 3,
+        "tasks": [
+          {
+            "summary": "[SEGURIDAD] Limpiar Google Sheets con datos personales de pacientes",
+            "description": "Identificar y eliminar datos personales de pacientes alojados en Google Sheets de cuentas personales, migrando lo necesario a canales controlados. Riesgo legal: ALTO — datos sensibles de salud tratados sin medidas de seguridad adecuadas = potencial muy grave con perjuicio (Art. 134.4, > S/ 275,000 a 550,000).",
+            "priority": "Highest"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Verificación de Controles de Acceso del Portal Paciente",
+        "description": "Verificar el restablecimiento de contraseña en el portal del paciente como control de acceso básico.",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[SEGURIDAD] Verificar el cambio de contraseña en recepción del portal paciente",
+            "description": "Verificar que el flujo de cambio/restablecimiento de contraseña del portal del paciente funcione en recepción. Su ausencia alimenta el supuesto de tratamiento sin medidas de seguridad (Art. 132.6).",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Base de Conocimiento Legal — Corpus PDF a Markdown",
+    "description": "Pipeline de procesamiento de normativa legal (PDF → Markdown legible por LLM) y base de conocimiento institucional para respaldar los documentos de cumplimiento.",
+    "priority": "Medium",
+    "stories": [
+      {
+        "summary": "HU: Pipeline OCR y Normalización de Documentos Legales",
+        "description": "Automatizar la conversión de documentos normativos PDF a Markdown con OCR y normalización.",
+        "priority": "Medium",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[CORPUS] Pipeline OCR PDF → Markdown (corpus/scripts/)",
+            "description": "Documentar y mantener el pipeline corpus/scripts/extract_pdf_to_md.py y ocr_extract.py (entrada RAW/, salida knowledge-base/Legal/). Registrar los documentos procesados en corpus/registry.json.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Carga de Normativa al Knowledge Base",
+        "description": "Procesar y mantener en knowledge-base/Legal las leyes y reglamentos que sustentan el plan de cumplimiento.",
+        "priority": "Medium",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[CORPUS] Procesar normativa legal al knowledge-base (Ley 29733, 26842, DS 016-2024-JUS)",
+            "description": "Documentar el procesamiento del corpus legal: Ley 29733, Ley 26842, Código Civil y Penal, DS 016-2024-JUS, Directiva de Seguridad ANPD, OP-001-2026-DGTAIPD y RM-476-2025-JUS. Mantener knowledge-base/Legal/manifest.json y las fichas en governance/Compliance/.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Infraestructura Documental — Generación LaTeX y Word",
+    "description": "Scripts y skills que automatizan la generación de documentos oficiales (políticas, formularios, contratos) en LaTeX y Word con layout institucional.",
+    "priority": "Medium",
+    "stories": [
+      {
+        "summary": "HU: Generador de Documentos Oficiales",
+        "description": "Scripts Python que generan los documentos oficiales en formato .tex y .docx con encabezado Endogastro.",
+        "priority": "Medium",
+        "storyPoints": 5,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Mantener generadores LaTeX/Word de documentos oficiales",
+            "description": "Documentar y mantener scripts/gen_docx.py, scripts/docx_helpers.py y los gen_*.py por documento (política, procedimiento ARCO, formularios ARCO, consentimiento, hoja de aprobación, DPAs, registro de accesos). Cada documento oficial exportable a .tex y .docx.",
+            "priority": "Medium"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Skills de Productividad para Documentación",
+        "description": "Skills .opencode/ que estandarizan la generación de documentos y el cumplimiento (latex, markdown, compliance, clasificación de datos, gestión de proveedores).",
+        "priority": "Low",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[DOCUMENTACIÓN] Mantener skills de generación y cumplimiento (.opencode/skills/)",
+            "description": "Documentar las skills de soporte: latex-generation, markdown-style, diagrams, anti-hallucination, compliance-basics, data-classification, vendor-management, secrets-management, backup-dr.",
+            "priority": "Low"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Operaciones — Pendientes de Infraestructura y Producto",
+    "description": "Pendientes operativos que impactan la seguridad de los datos personales o la operación (planeados para septiembre 2026).",
+    "priority": "High",
+    "stories": [
+      {
+        "summary": "HU: Migración de Hosting a VPS IONOS",
+        "description": "Migrar el hosting del HIS/EMR y correo corporativo a VPS IONOS, que cuenta con DPA vigente.",
+        "priority": "High",
+        "storyPoints": 8,
+        "tasks": [
+          {
+            "summary": "[DEVOPS] Migrar hosting a VPS IONOS (con DPA) para HIS/EMR y correo",
+            "description": "Planificar y ejecutar la migración del hosting a VPS IONOS (planeado septiembre 2026). El hosting actual no tiene DPA formal; documentar el plan de migración como evidencia de cumplimiento progresivo. IONOS cubrirá HIS/EMR y correo corporativo con su DPA vigente.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Corrección de Notificaciones Push iOS",
+        "description": "Corregir el bug de notificaciones push en iOS (APNs).",
+        "priority": "Medium",
+        "storyPoints": 2,
+        "tasks": [
+          {
+            "summary": "[PRODUCTO] Arreglar bug de notificaciones push iOS (APNs)",
+            "description": "Corregir el envío de notificaciones push en iOS (Apple Push Notification Service). Riesgo legal: bajo, no es tema de protección de datos.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]
