@@ -1,0 +1,90 @@
+[
+  {
+    "summary": "ÉPICA: Atención Médica — Consulta y Procedimientos",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Anatomía Patológica — Acceso Solo a Pacientes Asignados",
+        "description": "Como patólogo, necesito visualizar y gestionar únicamente los pacientes que tengo asignados. No debo tener acceso al listado general de pacientes.",
+        "priority": "High",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Restringir listado de pacientes de Anatomía Patológica a los asignados al patólogo",
+            "description": "Modificar la consulta de pacientes del módulo de Anatomía Patológica para que el patólogo autenticado solo obtenga los pacientes asignados a él. Revisar cómo se realiza la asignación de pacientes al patólogo; si no existe, implementarla. El patólogo no debe poder consultar el listado general de pacientes.",
+            "priority": "High"
+          },
+          {
+            "summary": "[FRONTEND] Mostrar solo pacientes asignados al patólogo en el módulo de Anatomía Patológica",
+            "description": "Ajustar la vista del módulo de Anatomía Patológica para que el patólogo vea únicamente sus pacientes asignados. Ocultar o eliminar el acceso al listado general de pacientes para el rol patólogo.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Reporte de Pacientes en Word con Diagnósticos Presuntivos",
+        "description": "Como patólogo, necesito seleccionar uno o varios pacientes, agregar uno o múltiples diagnósticos presuntivos por paciente y generar un único reporte en formato Word (.docx).",
+        "priority": "High",
+        "tasks": [
+          {
+            "summary": "[FRONTEND] Selección múltiple de pacientes y registro de diagnósticos presuntivos",
+            "description": "Agregar en el módulo de Anatomía Patológica la selección múltiple de pacientes (uno o varios) y, por cada paciente seleccionado, permitir registrar uno o múltiples diagnósticos presuntivos. Definir con el equipo si los diagnósticos se guardan en el sistema o solo se incluyen en el documento.",
+            "priority": "High"
+          },
+          {
+            "summary": "[BACKEND] Generar un único reporte Word (.docx) con los pacientes seleccionados y sus diagnósticos presuntivos",
+            "description": "Desarrollar la generación de un único archivo Word (.docx) que incluya todos los pacientes seleccionados con sus respectivos diagnósticos presuntivos (uno o varios por paciente). El documento debe salir completo en una sola entrega, no un PDF por paciente.",
+            "priority": "High"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Caja y Facturación",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Restricción de Ticket por Sucursal — Puno Habilitado / Ilave Deshabilitado",
+        "description": "Como administrador, necesito que el ticket solo se emita en la sucursal Puno y esté deshabilitado en la sucursal Ilave.",
+        "priority": "High",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Habilitar ticket solo en sucursal Puno y deshabilitarlo en Ilave",
+            "description": "Revisar la lógica de emisión de tickets por sucursal. El ticket debe emitirse únicamente en Puno y no en Ilave. Evaluar implementarlo como una configuración por sucursal (campo 'emitir ticket' en el mantenimiento de sucursales) en lugar de hardcodear las sucursales, para que sea mantenible.",
+            "priority": "High"
+          }
+        ]
+      },
+      {
+        "summary": "HU: Un Solo Documento por Pago — El Comprobante Tiene Prioridad sobre el Ticket",
+        "description": "Como cajero, necesito que al generar una boleta o factura solo se emita ese comprobante, sin generar también el ticket. El comprobante tiene prioridad sobre el ticket.",
+        "priority": "Highest",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Evitar generación simultánea de comprobante + ticket al emitir boleta o factura",
+            "description": "Revisar la lógica de emisión de pagos: actualmente al generar boleta o factura se emiten 2 documentos (comprobante + ticket). Modificar el flujo para que al emitir un comprobante (boleta/factura) solo se genere ese comprobante. El comprobante tiene prioridad sobre el ticket: si hay comprobante, no se genera ticket.",
+            "priority": "Highest"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "summary": "ÉPICA: Administración — Core del Sistema",
+    "existingEpicKey": true,
+    "stories": [
+      {
+        "summary": "HU: Nuevo Tipo de Servicio — Personalizado",
+        "description": "Como administrador, necesito agregar Personalizado como tercer tipo de servicio. Tipos finales: Simple, Complejo y Personalizado.",
+        "priority": "Medium",
+        "tasks": [
+          {
+            "summary": "[BACKEND] Agregar tipo de servicio Personalizado en el CRUD de Servicios",
+            "description": "En el mantenimiento (CRUD) de Servicios actualmente existen 2 tipos (SIMPLE y COMPLEJO). Agregar el tipo PERSONALIZADO: revisar la tabla o catálogo de tipos, las opciones del formulario de creación/edición y las validaciones, para incluir el nuevo tipo sin afectar a los 2 existentes. Tipos finales: Simple, Complejo y Personalizado.",
+            "priority": "Medium"
+          }
+        ]
+      }
+    ]
+  }
+]
