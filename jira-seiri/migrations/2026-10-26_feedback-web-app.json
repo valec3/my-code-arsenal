@@ -1,0 +1,142 @@
+{
+  "project": "endogastro",
+  "description": "Feedback del Dr. Joseph Portillo (9/10/2026) y de Victor Maye (12/10/2026) sobre web y app mobile",
+  "source": "Conversaciones con el administrador, 2026-10-26",
+  "items": [
+    {
+      "local_ref": "web-contenido",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[WEB] Corregir tildes y navegación de Especialidades, Otros y Servicios",
+      "description": "## Contexto\nHay tildes incorrectas y las pestañas de Especialidades y Otros recargan la página.\n\n## Criterios de aceptación\n- [ ] «Gastroenterología» y el resto de especialidades tienen tilde correcta.\n- [ ] La página de Servicios no tiene tildes faltantes.\n- [ ] Especialidades y Otros solo despliegan el contenido, sin recargar ni navegar.\n- [ ] El estado del resto de la página se mantiene.\n- [ ] Funciona en desktop y mobile.",
+      "parent": "ENG-203",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "web-integracion",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[WEB] Vincular especialistas, laboratorio y farmacia entre la web y el sistema",
+      "description": "## Contexto\nLa web mantiene contenido duplicado a mano; debe tomar los datos del sistema.\n\n## Criterios de aceptación\n- [ ] La página de especialistas toma datos y fotos del sistema.\n- [ ] Laboratorio y farmacia se vinculan con el sistema con el mismo criterio.\n- [ ] Un cambio en el sistema se refleja en la web sin editar contenido por separado.\n\n## Nota\nRelacionado con ENG-200 (foto/avatar de doctores).",
+      "parent": "ENG-203",
+      "priority": "High"
+    },
+    {
+      "local_ref": "web-seo",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[WEB] Posicionar CPRE como procedimiento y priorizar Puno en el SEO",
+      "description": "## Contexto\nCPRE debe posicionarse como procedimiento y las páginas de especialidad deben priorizar la sede Puno.\n\n## Criterios de aceptación\n- [ ] CPRE figura en la sección de procedimientos con contenido propio.\n- [ ] Cada página de especialidad menciona y prioriza Puno.\n- [ ] Títulos, metadescripciones y contenido incluyen la intención local.\n- [ ] No se genera contenido duplicado entre especialidades.",
+      "parent": "ENG-203",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-paciente",
+      "action": "CREATE",
+      "type": "Story",
+      "summary": "HU: Ajustes de UX/UI de la app mobile — Paciente",
+      "description": "## Contexto\nFeedback de uso de la app mobile del paciente: entrada, home, reservas, tienda y cuenta.\n\n## Alcance\nAjustes visuales y de contenido, vinculación con datos de la web y corrección del cierre de sesión. Las tareas están agrupadas por pantalla; el detalle vive en cada subtask.\n\n## Criterios de aceptación\n- [ ] Los ajustes se ven en iOS y Android.\n- [ ] La app mantiene el flujo actual de reservas y tienda.\n- [ ] No se rompe la sesión ni la navegación.",
+      "parent": "ENG-168",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-paciente-home",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Ajustes visuales de entrada y home del paciente",
+      "description": "## Contexto\nAjustes visuales de la pantalla de entrada y del home del paciente.\n\n## Criterios de aceptación\n- [ ] La entrada usa fondo claro y el logo se ve con contraste.\n- [ ] El slide del paciente muestra: «Agenda tus citas, consulta tus estudios y receta médica de forma segura».\n- [ ] El slider queda centrado, más abajo y sin tapar la barra superior.\n- [ ] Se sumaron las especialidades médicas faltantes al slider.\n- [ ] La barra superior del paciente tiene más espacio.\n- [ ] Los accesos rápidos de «nuestra experiencia» tienen borde amarillo.\n- [ ] El texto del logo usa la tipografía Cinzel.\n- [ ] La etiqueta de home dice INICIO en lugar de EndoGASTRO.\n- [ ] Revisado en iOS, Android y pantallas chicas.",
+      "parent": "app-paciente",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "app-paciente-reservas",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Reservas del paciente: especialistas y selección de fecha",
+      "description": "## Contexto\nEn Reservas se deben mostrar los especialistas reales y mejorar la selección de fecha.\n\n## Criterios de aceptación\n- [ ] La reserva muestra nombre, especialidad y foto del especialista desde la web/sistema.\n- [ ] Si falta la foto, hay un placeholder consistente.\n- [ ] Las horas quedan centradas respecto de la pantalla.\n- [ ] La fecha seleccionada tiene borde verde.\n- [ ] Se ve bien en iOS y Android.\n\n## Nota\nDepende de ENG-200 y de la vinculación web-sistema.",
+      "parent": "app-paciente",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-paciente-tienda",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Tienda: bordes y foto de producto vinculada a la web",
+      "description": "## Contexto\nLas casillas de Tienda no se distinguen y los productos no muestran foto.\n\n## Criterios de aceptación\n- [ ] Farmacia, laboratorio y búsqueda tienen borde verde o amarillo, consistente entre sí.\n- [ ] La tienda muestra la foto del producto tomada de la fuente vinculada con la web.\n- [ ] Hay placeholder cuando el producto no tiene foto.\n- [ ] La imagen no deforma la tarjeta.",
+      "parent": "app-paciente",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "app-paciente-cuenta",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Cuenta del paciente: edición de datos, logout y texto legal",
+      "description": "## Contexto\nEl paciente no puede editar sus datos, el cierre de sesión falla y el texto legal menciona PERÚ.\n\n## Criterios de aceptación\n- [ ] Existe una pantalla o acción para editar datos personales, con validación de obligatorios.\n- [ ] Los cambios se guardan y se reflejan en el sistema.\n- [ ] Cerrar sesión funciona sin error, limpia la sesión y vuelve al login.\n- [ ] La palabra PERÚ ya no aparece en el texto legal; el resto queda intacto.\n- [ ] Probado en iOS y Android.",
+      "parent": "app-paciente",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-especialista",
+      "action": "CREATE",
+      "type": "Story",
+      "summary": "HU: Ajustes de UX/UI de la app mobile — Especialista",
+      "description": "## Contexto\nFeedback de uso de la app mobile del especialista: login, perfil, entrada a paciente, atención, receta y laboratorio.\n\n## Alcance\nAjustes visuales, correcciones de estado y la separación entre previsualizar y crear documentos. Las tareas están agrupadas por flujo; el detalle vive en cada subtask.\n\n## Criterios de aceptación\n- [ ] Los ajustes se ven en iOS y Android.\n- [ ] El flujo de atención y receta sigue funcionando.\n- [ ] No se crean documentos al previsualizar.",
+      "parent": "ENG-168",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-especialista-login",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Login y perfil del especialista",
+      "description": "## Contexto\nEl login debe captar especialistas y falta acceso al perfil médico.\n\n## Criterios de aceptación\n- [ ] El login muestra un anuncio para trabajar con nosotros, con acción de contacto o postulación.\n- [ ] El slide dice «Portal del especialista».\n- [ ] Existe un botón Perfil médico que abre el perfil del especialista autenticado.\n- [ ] Nada de esto interfiere con el inicio de sesión.",
+      "parent": "app-especialista",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "app-especialista-entrada",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Entrada a paciente: pestaña inicial, formulario limpio y listado",
+      "description": "## Contexto\nAl ingresar un paciente nuevo se arrastra el estado del anterior y el listado muestra más de lo necesario.\n\n## Criterios de aceptación\n- [ ] Al ingresar a un paciente nuevo se abre la pestaña inicial.\n- [ ] El formulario se limpia y no se filtra el estado del paciente anterior.\n- [ ] Se pierde el estado del paciente anterior solo al iniciar uno nuevo, no durante una atención en curso.\n- [ ] El listado muestra solo los últimos 10 pacientes, ordenados por atención más reciente, sin perder la búsqueda.\n- [ ] Los nombres de sala de espera usan un único criterio de mayúsculas/minúsculas, con tildes y nombres compuestos respetados.",
+      "parent": "app-especialista",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-especialista-atencion",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Atención actual: bordes, fondos y WhatsApp",
+      "description": "## Contexto\nLa pantalla de atención necesita jerarquía visual y un acceso directo a WhatsApp.\n\n## Criterios de aceptación\n- [ ] Atención actual queda centrada y con borde de color.\n- [ ] Los inputs del formulario de atención tienen borde, visible también con foco y error.\n- [ ] Diagnóstico y búsqueda de medicamentos tienen borde.\n- [ ] Historial, Atención actual y Órdenes tienen fondo de color, igual que las casillas pequeñas debajo.\n- [ ] Hay un botón de WhatsApp en Atención actual.\n- [ ] Hay contraste suficiente para leer en todas las secciones.",
+      "parent": "app-especialista",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "app-especialista-defaults",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Quitar textos precargados en indicaciones, dieta y recetas",
+      "description": "## Contexto\nIndicaciones, dieta y recomendaciones aparecen con texto por defecto aunque el médico no escriba nada.\n\n## Criterios de aceptación\n- [ ] Indicaciones generales y dieta inician vacías y no guardan texto por defecto.\n- [ ] Si no hay recomendaciones, la receta se guarda sin texto inventado.\n- [ ] El PDF refleja exactamente lo cargado.\n- [ ] Los placeholders no se confunden con contenido real.",
+      "parent": "app-especialista",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-especialista-documentos",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Previsualización y generación de recetas, laboratorio y farmacia",
+      "description": "## Contexto\nHoy el botón de generar crea el documento directamente. Se quiere previsualizar primero y crear recién al confirmar, en receta, laboratorio y farmacia.\n\n## Criterios de aceptación\n- [ ] Ver receta, ver orden de laboratorio y ver orden de farmacia muestran una previsualización sin crear nada.\n- [ ] Guardar y generar crea el documento y guarda el PDF.\n- [ ] Repetir la previsualización no genera registros.\n- [ ] Aplica a receta, laboratorio y farmacia.",
+      "parent": "app-especialista",
+      "priority": "High"
+    },
+    {
+      "local_ref": "app-especialista-cierre",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Acciones al finalizar la atención y orden de laboratorio",
+      "description": "## Contexto\nDebajo de Guardar y generar receta deben aparecer Orden de laboratorio y Finalizar atención, en lugar de Volver a examen físico.\n\n## Criterios de aceptación\n- [ ] Aparecen los botones Orden de laboratorio y Finalizar atención.\n- [ ] Ya no aparece Volver a examen físico en esa ubicación.\n- [ ] Finalizar atención cierra el flujo correctamente y está disponible al final del flujo de laboratorio.\n- [ ] Orden de laboratorio abre su flujo sin perder la receta.\n\n## Nota\nEl detalle de los ajustes de laboratorio queda pendiente de la próxima conversación.",
+      "parent": "app-especialista",
+      "priority": "High"
+    }
+  ]
+}
