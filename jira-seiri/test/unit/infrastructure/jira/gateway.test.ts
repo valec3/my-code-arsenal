@@ -396,4 +396,37 @@ describe('HttpJiraGateway', () => {
     expect(body).toEqual({ issues: ['ENG-353', 'ENG-354'] });
     expect(scope.isDone()).toBe(true);
   });
+
+  it('crea un sprint futuro en el board', async () => {
+    let body: any;
+    const scope = nock(HOST)
+      .post(`${API_AGILE}/sprint`, (payload) => {
+        body = payload;
+        return true;
+      })
+      .reply(201, {
+        id: 37,
+        name: 'Verificacion',
+        state: 'future',
+        startDate: '2026-10-26T00:00:00.000Z',
+        endDate: '2026-11-01T00:00:00.000Z',
+        originBoardId: 2,
+      });
+
+    const sprint = await buildGateway().createSprint({
+      name: 'Verificacion',
+      boardId: 2,
+      startDate: '2026-10-26T00:00:00.000Z',
+      endDate: '2026-11-01T00:00:00.000Z',
+    });
+
+    expect(body).toEqual({
+      name: 'Verificacion',
+      originBoardId: 2,
+      startDate: '2026-10-26T00:00:00.000Z',
+      endDate: '2026-11-01T00:00:00.000Z',
+    });
+    expect(sprint).toMatchObject({ id: 37, name: 'Verificacion', boardId: 2 });
+    expect(scope.isDone()).toBe(true);
+  });
 });

@@ -37,7 +37,7 @@ Las skills siguen el formato Agent Skills (`SKILL.md` + frontmatter). opencode l
 2. No inventes keys, prioridades, story points, fechas ni assignees.
 3. No crees duplicados: buscá primero en el contexto.
 4. Escribí solo en `migrations/`. No toques `src/`, `schema.sql` ni otros proyectos.
-5. No ejecutes `apply`, `transition`, `assign` ni `sprint-move` sin aprobación explícita del humano.
+5. No ejecutes `apply`, `transition`, `assign`, `sprint-create` ni `sprint-move` sin aprobación explícita del humano.
 6. Español rioplatense para issues; inglés para código, endpoints y nombres de campos.
 7. Si falta contexto, preguntá. No rellenes huecos con suposiciones silenciosas.
 
@@ -55,11 +55,12 @@ npx tsx src/cli.ts users <proyecto>
 npx tsx src/cli.ts assign <proyecto> <accountId> <keys...> --dry-run
 npx tsx src/cli.ts assign <proyecto> <accountId> <keys...>
 npx tsx src/cli.ts sprints <proyecto> [--board <id>] [--state active,future,closed]
+npx tsx src/cli.ts sprint-create <proyecto> --name <nombre> [--start YYYY-MM-DD] [--end YYYY-MM-DD] [--dry-run]
 npx tsx src/cli.ts sprint-move <proyecto> <sprintId> <keys...> --dry-run
 npx tsx src/cli.ts sprint-move <proyecto> <sprintId> <keys...>
 ```
 
-`init`, `pull`, `validate`, `apply`, `transition`, `users`, `assign`, `sprints` y `sprint-move` están disponibles.
+`init`, `pull`, `validate`, `apply`, `transition`, `users`, `assign`, `sprints`, `sprint-create` y `sprint-move` están disponibles.
 
 `validate` sale con `0` si está limpio, `2` ante errores de contrato/jerarquía/parent y `3` si detecta duplicados posibles. Nunca toca la red.
 
@@ -69,7 +70,7 @@ npx tsx src/cli.ts sprint-move <proyecto> <sprintId> <keys...>
 
 `users` lista los usuarios asignables con su `accountId` (el email puede estar oculto). `assign` asigna issues por `accountId`; no resuelve nombres ni emails y no actualiza el cache local.
 
-`sprints` lista los boards con sprints (`scrum` o `simple`) y sus sprints; si hay varios, exige `--board`. `sprint-move` valida que el sprint exista y esté abierto, mueve issues por `sprintId` y no actualiza el cache local. Ambos requieren Jira Software; para mover hace falta el permiso **Manage sprints**.
+`sprints` lista los boards con sprints (`scrum` o `simple`) y sus sprints; si hay varios, exige `--board`. `sprint-create` crea un sprint futuro con fechas opcionales en `YYYY-MM-DD`; no inicia el sprint. `sprint-move` valida que el sprint exista y esté abierto, mueve issues por `sprintId` y no actualiza el cache local. Todos requieren Jira Software; crear o mover exige el permiso **Manage sprints**.
 
 ## Portabilidad
 

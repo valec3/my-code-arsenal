@@ -21,11 +21,16 @@ export interface ResolvedSprint {
   sprint: JiraSprint;
 }
 
-export async function listProjectSprints(
+export interface ResolvedBoard {
+  board: JiraBoard;
+  boards: JiraBoard[];
+}
+
+export async function resolveSprintBoard(
   gateway: JiraGateway,
   projectKey: string,
-  options: ListSprintsOptions = {}
-): Promise<SprintListReport> {
+  boardId?: number
+): Promise<ResolvedBoard> {
   const boards = await gateway.listBoards(projectKey);
   const sprintBoards = boards.filter((board) => isSprintBoard(board));
 
@@ -45,11 +50,11 @@ export async function listProjectSprints(
   }
 
   let board: JiraBoard | undefined;
-  if (options.boardId !== undefined) {
-    board = sprintBoards.find((candidate) => candidate.id === options.boardId);
+  if (boardId !== undefined) {
+    board = sprintBoards.find((candidate) => candidate.id === boardId);
     if (!board) {
       throw new SeiriError(
-        `El board ${options.boardId} no es un board con sprints de ${projectKey}.`,
+        `El board ${boardId} no es un board con sprints de ${projectKey}.`,
         'VALIDATION',
         `Boards disponibles: ${describeBoards(sprintBoards)}.`
       );
@@ -66,10 +71,16 @@ export async function listProjectSprints(
     );
   }
 
-  const sprints = await gateway.listSprints(
-    board.id,
-    options.states ?? SPRINT_STATES
-  );
+  return { board, boards };
+}
+
+export async function listProjectSprints(
+  gateway: JiraGateway,
+  projectKey: string,
+  options: ListSprintsOptions = {}
+): Promise<SprintListReport> {
+  const { board, boards } = await resolveSprintBoard(gateway, projectKey, options.boardId);
+  const sprints = await gateway.listSprints(board.id, options.states ?? SPRINT_STATES);
 
   return {
     projectKey,

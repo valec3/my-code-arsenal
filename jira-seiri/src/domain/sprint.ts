@@ -12,3 +12,10 @@ export interface JiraSprint {
   endDate: string | null;
   boardId: number | null;
 }
+
+export interface CreateSprintInput {
+  name: string;
+  boardId: number;
+  startDate?: string;
+  endDate?: string;
+}

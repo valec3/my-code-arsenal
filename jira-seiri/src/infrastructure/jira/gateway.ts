@@ -1,6 +1,6 @@
 import { SeiriError } from '../../domain/errors';
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../../domain/issue';
-import type { JiraBoard, JiraSprint } from '../../domain/sprint';
+import type { CreateSprintInput, JiraBoard, JiraSprint } from '../../domain/sprint';
 import type { IssueTransition } from '../../domain/transition';
 import type { JiraUser } from '../../domain/user';
 import type { JiraGateway } from '../../ports/jira-gateway';
@@ -14,6 +14,7 @@ import type {
   JiraIssueFieldsDto,
   JiraIssueTypesPageDto,
   JiraSearchResponseDto,
+  JiraSprintDto,
   JiraSprintsPageDto,
   JiraTransitionsResponseDto,
   JiraUserDto,
@@ -251,14 +252,7 @@ export class HttpJiraGateway implements JiraGateway {
 
       const batch = page.values ?? [];
       for (const dto of batch) {
-        sprints.push({
-          id: dto.id,
-          name: dto.name ?? `Sprint ${dto.id}`,
-          state: dto.state ?? 'unknown',
-          startDate: dto.startDate ?? null,
-          endDate: dto.endDate ?? null,
-          boardId: dto.originBoardId ?? boardId,
-        });
+        sprints.push(this.mapSprint(dto, boardId));
       }
 
       if (page.isLast || batch.length < AGILE_PAGE_SIZE) {
@@ -270,8 +264,35 @@ export class HttpJiraGateway implements JiraGateway {
     return sprints;
   }
 
+  async createSprint(input: CreateSprintInput): Promise<JiraSprint> {
+    const payload: Record<string, unknown> = {
+      name: input.name,
+      originBoardId: input.boardId,
+    };
+    if (input.startDate) {
+      payload.startDate = input.startDate;
+    }
+    if (input.endDate) {
+      payload.endDate = input.endDate;
+    }
+
+    const dto = await this.http.agilePost<JiraSprintDto>('/sprint', payload);
+    return this.mapSprint(dto, input.boardId);
+  }
+
   async moveIssuesToSprint(sprintId: number, keys: readonly string[]): Promise<void> {
     await this.http.agilePost<void>(`/sprint/${sprintId}/issue`, { issues: [...keys] });
+  }
+
+  private mapSprint(dto: JiraSprintDto, fallbackBoardId: number): JiraSprint {
+    return {
+      id: dto.id,
+      name: dto.name ?? `Sprint ${dto.id}`,
+      state: dto.state ?? 'unknown',
+      startDate: dto.startDate ?? null,
+      endDate: dto.endDate ?? null,
+      boardId: dto.originBoardId ?? fallbackBoardId,
+    };
   }
 
   private mapIssue(dto: JiraIssueDto): Issue {

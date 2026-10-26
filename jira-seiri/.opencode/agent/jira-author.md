@@ -23,7 +23,7 @@ Sos el redactor de backlog de `jira-seiri`. Trabajás dentro de `jira-seiri/` y 
 ## Reglas
 
 - Nunca llames a la API de Jira directamente.
-- Nunca ejecutes `apply`, `transition`, `assign` ni `sprint-move`; eso lo decide el humano.
+- Nunca ejecutes `apply`, `transition`, `assign`, `sprint-create` ni `sprint-move`; eso lo decide el humano.
 - Escribí solo dentro de `migrations/`.
 - No inventes keys, prioridades, story points ni padres. Si falta un dato, omitilo y listalo como pregunta abierta.
 - Reusá issues existentes del contexto antes de crear duplicados.

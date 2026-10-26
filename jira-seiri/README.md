@@ -26,14 +26,14 @@ La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en 
 
 ## Estado
 
-Fase 8 — `sprints` y `sprint-move`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users`, `seiri assign`, `seiri sprints` y `seiri sprint-move`.
+Fase 9 — `sprint-create`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users`, `seiri assign`, `seiri sprints`, `seiri sprint-create` y `seiri sprint-move`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
 - `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
 - `transition` mueve issues existentes a otro estado usando las transiciones del workflow, sin inventar IDs.
 - `users` lista los usuarios asignables del proyecto y `assign` asigna issues existentes por `accountId`.
-- `sprints` lista los boards Scrum y sus sprints; `sprint-move` mueve issues existentes a un sprint.
+- `sprints` lista los boards con sprints y sus sprints; `sprint-create` crea un sprint futuro y `sprint-move` mueve issues existentes a un sprint.
 
 ## Requisitos
 
@@ -239,6 +239,31 @@ Requiere Jira Software y permiso para ver el board.
 | `1` | El proyecto no tiene board Scrum o falló la API |
 | `2` | `--board` inválido o hay varios boards sin elegir |
 
+### sprint-create
+
+Crea un sprint **futuro** en el board. Jira lo deja en estado `future` hasta que lo inicies desde la UI. Las fechas son opcionales y se aceptan como `YYYY-MM-DD` o ISO 8601.
+
+```bash
+npx tsx src/cli.ts sprint-create endogastro --name "Verificacion feedback octubre" --start 2026-10-26 --end 2026-11-01 --dry-run
+npx tsx src/cli.ts sprint-create endogastro --name "Verificacion feedback octubre" --start 2026-10-26 --end 2026-11-01
+npx tsx src/cli.ts sprint-create endogastro --name "Sprint seco" --json
+```
+
+Garantías:
+
+- **Board resuelto:** usa el único board con sprints o el indicado con `--board`.
+- **Fechas:** valida el calendario y que el fin no sea anterior al inicio.
+- **Dry-run:** valida el board y muestra el sprint sin crearlo.
+- **Sin borrado:** el CLI no elimina sprints; si te equivocaste, se borra desde Jira.
+
+Requiere el permiso **Manage sprints**.
+
+| Exit | Significado |
+|---|---|
+| `0` | Sprint creado o dry-run |
+| `1` | El proyecto no tiene board con sprints o falló la API |
+| `2` | Nombre, fechas o board inválidos |
+
 ### sprint-move
 
 Mueve issues existentes a un sprint. Valida que el sprint exista en un board Scrum del proyecto y que no esté cerrado antes de escribir.
@@ -272,7 +297,7 @@ Requiere el permiso **Manage sprints** y que las issues pertenezcan al board.
 3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
 4. Si hace falta mover estados, usá `seiri transition` con `--dry-run` primero.
 5. Para asignar responsables, listá con `seiri users` y después usá `seiri assign` con el `accountId`.
-6. Para planificar el trabajo, listá los sprints con `seiri sprints` y mové issues con `seiri sprint-move`.
+6. Para planificar el trabajo, listá con `seiri sprints`, creá uno con `seiri sprint-create` y mové issues con `seiri sprint-move`.
 
 ## Skills y agentes
 
