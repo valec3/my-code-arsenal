@@ -52,6 +52,16 @@ export interface JiraCreateIssueResponseDto {
   key: string;
 }
 
+export interface JiraTransitionDto {
+  id: string;
+  name: string;
+  to?: { name?: string };
+}
+
+export interface JiraTransitionsResponseDto {
+  transitions?: JiraTransitionDto[];
+}
+
 export interface JiraErrorDto {
   errorMessages?: string[];
   errors?: Record<string, string>;

@@ -37,7 +37,7 @@ Las skills siguen el formato Agent Skills (`SKILL.md` + frontmatter). opencode l
 2. No inventes keys, prioridades, story points, fechas ni assignees.
 3. No crees duplicados: buscá primero en el contexto.
 4. Escribí solo en `migrations/`. No toques `src/`, `schema.sql` ni otros proyectos.
-5. No ejecutes `apply` sin aprobación explícita del humano.
+5. No ejecutes `apply` ni `transition` sin aprobación explícita del humano.
 6. Español rioplatense para issues; inglés para código, endpoints y nombres de campos.
 7. Si falta contexto, preguntá. No rellenes huecos con suposiciones silenciosas.
 
@@ -49,13 +49,17 @@ npx tsx src/cli.ts pull <proyecto>
 npx tsx src/cli.ts validate migrations/<archivo>.json
 npx tsx src/cli.ts apply migrations/<archivo>.json --dry-run
 npx tsx src/cli.ts apply migrations/<archivo>.json
+npx tsx src/cli.ts transition <proyecto> <keys...> --to <estado> --dry-run
+npx tsx src/cli.ts transition <proyecto> <keys...> --to <estado>
 ```
 
-`init`, `pull`, `validate` y `apply` están disponibles.
+`init`, `pull`, `validate`, `apply` y `transition` están disponibles.
 
 `validate` sale con `0` si está limpio, `2` ante errores de contrato/jerarquía/parent y `3` si detecta duplicados posibles. Nunca toca la red.
 
 `apply` valida de nuevo antes de tocar Jira. Con `--dry-run` muestra el plan sin red ni escrituras. Sin `--allow-duplicates` aborta con exit `3` si hay duplicados, y si una corrida falla a mitad queda en `PARTIAL` (exit `4`) para retomarla sin recrear lo ya hecho.
+
+`transition` mueve issues existentes usando las transiciones reales del workflow. `--dry-run` consulta Jira y muestra el plan sin escribir; si la issue ya está en el estado destino, la saltea.
 
 ## Portabilidad
 

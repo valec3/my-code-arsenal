@@ -5,6 +5,7 @@ import { registerInitCommand } from './commands/init';
 import { registerPullCommand } from './commands/pull';
 import { registerValidateCommand } from './commands/validate';
 import { registerApplyCommand } from './commands/apply';
+import { registerTransitionCommand } from './commands/transition';
 import { SeiriError } from './domain/errors';
 import { EXIT, exitCodeFor } from './shared/exit-codes';
 
@@ -21,6 +22,7 @@ registerInitCommand(program);
 registerPullCommand(program);
 registerValidateCommand(program);
 registerApplyCommand(program);
+registerTransitionCommand(program);
 
 program.addHelpText(
   'after',
@@ -31,6 +33,8 @@ ${pc.bold('Flujo de trabajo:')}
   3. (el agente escribe)         migrations/YYYY-MM-DD_descripcion.json
   4. seiri validate <archivo>    chequeos locales, sin red
   5. seiri apply <archivo>       Jira -> SQLite (idempotente)
+  6. seiri transition <proyecto> <keys...> --to <estado>
+                                 mueve issues segun el workflow
 
 Seiri nunca crea nada sin un archivo de migracion revisado.
 `

@@ -1,0 +1,16 @@
+{
+  "project": "endogastro",
+  "description": "Actualización masiva de precios de medicamentos según indicación del administrador",
+  "source": "Reporte del administrador, 2026-10-25",
+  "items": [
+    {
+      "local_ref": "precios-medicamentos",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "Actualizar los precios de todos los medicamentos según indicación del administrador",
+      "description": "## Contexto\nEl administrador indicó una actualización de precios para el catálogo de medicamentos. Se aplicó sobre la totalidad de los medicamentos registrados.\n\n## Criterios de aceptación\n- [x] Precios actualizados en todos los medicamentos\n- [x] Catálogo contrastado contra la lista indicada por el administrador\n- [x] Sin medicamentos faltantes ni precios duplicados\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-127",
+      "priority": "High"
+    }
+  ]
+}

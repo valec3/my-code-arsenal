@@ -237,4 +237,35 @@ describe('HttpJiraGateway', () => {
       { id: 'customfield_10016', name: 'Story Points', custom: true },
     ]);
   });
+
+  it('lista las transiciones disponibles de una issue', async () => {
+    const scope = nock(HOST)
+      .get(`${API}/issue/ENG-5/transitions`)
+      .reply(200, {
+        transitions: [
+          { id: '31', name: 'Done', to: { name: 'Done' } },
+          { id: '21', name: 'Empezar', to: { name: 'In Progress' } },
+        ],
+      });
+
+    await expect(buildGateway().getTransitions('ENG-5')).resolves.toEqual([
+      { id: '31', name: 'Done', to: 'Done' },
+      { id: '21', name: 'Empezar', to: 'In Progress' },
+    ]);
+    expect(scope.isDone()).toBe(true);
+  });
+
+  it('aplica una transicion por id', async () => {
+    let body: any;
+    const scope = nock(HOST)
+      .post(`${API}/issue/ENG-5/transitions`, (payload) => {
+        body = payload;
+        return true;
+      })
+      .reply(204);
+
+    await expect(buildGateway().transitionIssue('ENG-5', '31')).resolves.toBeUndefined();
+    expect(body).toEqual({ transition: { id: '31' } });
+    expect(scope.isDone()).toBe(true);
+  });
 });

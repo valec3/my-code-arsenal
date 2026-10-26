@@ -1,5 +1,6 @@
 import { SeiriError } from '../../domain/errors';
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../../domain/issue';
+import type { IssueTransition } from '../../domain/transition';
 import type { JiraGateway } from '../../ports/jira-gateway';
 import { adfToPlainText, plainTextToAdf } from './adf';
 import { JiraHttpClient, type JiraConnectionConfig } from './client';
@@ -10,6 +11,7 @@ import type {
   JiraIssueFieldsDto,
   JiraIssueTypesPageDto,
   JiraSearchResponseDto,
+  JiraTransitionsResponseDto,
 } from './dto';
 
 const PAGE_SIZE = 100;
@@ -139,6 +141,25 @@ export class HttpJiraGateway implements JiraGateway {
 
   async deleteIssue(key: string): Promise<void> {
     await this.http.delete(`/issue/${encodeURIComponent(key)}`);
+  }
+
+  async getTransitions(issueKey: string): Promise<IssueTransition[]> {
+    const data = await this.http.get<JiraTransitionsResponseDto>(
+      `/issue/${encodeURIComponent(issueKey)}/transitions`
+    );
+
+    return (data.transitions ?? []).map((transition) => ({
+      id: transition.id,
+      name: transition.name,
+      to: transition.to?.name ?? transition.name,
+    }));
+  }
+
+  async transitionIssue(issueKey: string, transitionId: string): Promise<void> {
+    await this.http.post<void>(
+      `/issue/${encodeURIComponent(issueKey)}/transitions`,
+      { transition: { id: transitionId } }
+    );
   }
 
   private mapIssue(dto: JiraIssueDto): Issue {

@@ -1,0 +1,25 @@
+{
+  "project": "endogastro",
+  "description": "Trabajo completado de infraestructura: actualización de PHP por seguridad y entorno de desarrollo en Hetzner",
+  "source": "Reporte del administrador, 2026-10-25",
+  "items": [
+    {
+      "local_ref": "php-cpanel-security",
+      "action": "CREATE",
+      "type": "Task",
+      "summary": "Actualizar la versión de PHP en cPanel por vulnerabilidad detectada y validar el funcionamiento",
+      "description": "## Contexto\nSe detectó una vulnerabilidad en la versión de PHP en uso. Se actualizó la versión en cPanel para cerrar el riesgo.\n\n## Criterios de aceptación\n- [x] Versión de PHP actualizada en cPanel\n- [x] Funcionamiento del sitio y de la aplicación validado después del cambio\n- [x] Sin errores de compatibilidad en los módulos principales\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-181",
+      "priority": "Highest"
+    },
+    {
+      "local_ref": "hetzner-dev-env",
+      "action": "CREATE",
+      "type": "Task",
+      "summary": "Crear entorno de desarrollo en Hetzner con base de datos, Docker y firewall",
+      "description": "## Contexto\nSe creó un entorno de desarrollo en Hetzner para separar el trabajo de infraestructura del hosting de producción.\n\n## Criterios de aceptación\n- [x] Servidor en Hetzner provisionado\n- [x] Base de datos configurada y operativa\n- [x] Servicios levantados con Docker\n- [x] Firewall configurado y puertos expuestos solo los necesarios\n- [x] Configuración general del entorno documentada\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-181",
+      "priority": "High"
+    }
+  ]
+}

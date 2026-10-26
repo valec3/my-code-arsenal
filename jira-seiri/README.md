@@ -17,17 +17,21 @@ migrations/YYYY-MM-DD_descripcion.json
       │  seiri validate  (sin red)
       ▼
 seiri apply  →  Jira + SQLite
+      │  seiri transition  (opcional)
+      ▼
+Estados del workflow actualizados
 ```
 
 La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en tu editor. El CLI valida jerarquía, detecta duplicados y aplica de forma idempotente.
 
 ## Estado
 
-Fase 5 — `apply`. Disponible: `seiri init`, `seiri pull`, `seiri validate` y `seiri apply`.
+Fase 6 — `transition`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply` y `seiri transition`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
 - `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
+- `transition` mueve issues existentes a otro estado usando las transiciones del workflow, sin inventar IDs.
 
 ## Requisitos
 
@@ -150,11 +154,35 @@ Garantías:
 | `3` | Duplicados sin `--allow-duplicates` |
 | `4` | Resultado parcial: corregí el error y volvé a correr |
 
+### transition
+
+Mueve issues existentes a otro estado. Jira no acepta el nombre del estado: hay que pedir las transiciones disponibles del issue y aplicar el ID. `--dry-run` hace ese GET y muestra el plan sin escribir.
+
+```bash
+npx tsx src/cli.ts transition endogastro ENG-337 ENG-338 --to Done --dry-run
+npx tsx src/cli.ts transition endogastro ENG-337 ENG-338 --to Done
+npx tsx src/cli.ts transition endogastro ENG-337 --to Done --json
+```
+
+Garantías:
+
+- **Workflow real:** solo ofrece transiciones que Jira permite para esa issue y ese estado. Si no hay una transición directa a `Done`, lo reporta con las opciones disponibles.
+- **Idempotente:** si la issue ya está en el estado destino, la saltea sin llamar a la API de transición.
+- **Cache al día:** después de mover, relee la issue y actualiza SQLite.
+- **Parcial:** si una falla, sigue con las demás y devuelve exit `4`; si todas fallan, exit `2`.
+
+| Exit | Significado |
+|---|---|
+| `0` | Todas movidas, ya estaban o dry-run |
+| `2` | Ninguna se pudo mover (workflow o keys inválidas) |
+| `4` | Parcial: mover las que quedaron y volver a correr |
+
 ## Después del pull
 
 1. Abrí `projects/endogastro/.jira_context.md` y verificá que estén tus epics, stories y subtasks con sus estados.
 2. Ese archivo es el contexto que el agente usará para escribir migraciones sin duplicar tickets.
 3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
+4. Si hace falta mover estados, usá `seiri transition` con `--dry-run` primero.
 
 ## Skills y agentes
 
@@ -187,7 +215,7 @@ schema.sql                     esquema completo e idempotente
 src/
   cli.ts                       composition root + manejo de errores
   commands/                    un archivo por comando (delgados)
-  application/                 casos de uso: init, pull, contexto, validate, apply
+  application/                 casos de uso: init, pull, contexto, validate, apply, transition
   domain/                      reglas puras: errores, contrato v1, jerarquia, similitud
   config/                      rutas y carga de .env
   shared/                      logger y exit codes
