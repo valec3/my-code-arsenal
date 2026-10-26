@@ -63,33 +63,34 @@ Son dos archivos, ambos ignorados por Git y ya creados en este repo:
 
 Si te olvidás de reemplazar un valor de ejemplo, `seiri` lo detecta y te dice exactamente qué variable falta.
 
-Para crear otro proyecto: `npm run seiri -- init <nombre>` y después copiá `projects/<nombre>/.env.example` a `.env`.
+Para crear otro proyecto: `npx tsx src/cli.ts init <nombre>` y después copiá `projects/<nombre>/.env.example` a `.env`.
 
 ## Uso
 
 ```bash
 # crea projects/<nombre>/ con su .env.example y su base local (idempotente)
-npm run seiri -- init endogastro
+npx tsx src/cli.ts init endogastro
 
 # Jira -> SQLite + projects/endogastro/.jira_context.md
-npm run seiri -- pull endogastro
+npx tsx src/cli.ts pull endogastro
 
-# npm intercepta --help y --version, asi que se invocan directo
 npx tsx src/cli.ts --help
 npx tsx src/cli.ts --version
 ```
 
 `init` es idempotente: se puede volver a correr sin destruir datos ni pisar `.env.example`.
 
+> En Windows con npm 10, `npm run seiri -- ...` descarta los flags (`--days`, `--dry-run`, `--json`) sin avisar. Por eso todos los ejemplos usan `npx tsx src/cli.ts`.
+
 ### pull
 
 Sincroniza Jira con la base local y escribe `projects/<nombre>/.jira_context.md`.
 
 ```bash
-npm run seiri -- pull endogastro                  # ultimos 30 dias
-npm run seiri -- pull endogastro --days 7
-npm run seiri -- pull endogastro --jql 'project = ENG AND status != Done'
-npm run seiri -- pull endogastro --max-issues 80
+npx tsx src/cli.ts pull endogastro                  # ultimos 30 dias
+npx tsx src/cli.ts pull endogastro --days 7
+npx tsx src/cli.ts pull endogastro --jql 'project = ENG AND status != Done'
+npx tsx src/cli.ts pull endogastro --max-issues 80
 ```
 
 - El upsert es transaccional y no borra issues fuera de la ventana: el cache se va completando con cada pull.
@@ -101,9 +102,9 @@ npm run seiri -- pull endogastro --max-issues 80
 Valida una migración contra la base local antes de tocar Jira.
 
 ```bash
-npm run seiri -- validate migrations/2026-10-24_auth.json
-npm run seiri -- validate migrations/2026-10-24_auth.json --threshold 90
-npm run seiri -- validate migrations/2026-10-24_auth.json --json
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json --threshold 90
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json --json
 ```
 
 Qué comprueba:
@@ -128,9 +129,9 @@ El umbral default es 80% y se ajusta con `--threshold`. `--json` devuelve el rep
 Aplica la migración en Jira y actualiza el cache local. Vuelve a correr `validate` internamente antes de tocar la red.
 
 ```bash
-npm run seiri -- apply migrations/2026-10-24_auth.json --dry-run   # plan, sin red ni escrituras
-npm run seiri -- apply migrations/2026-10-24_auth.json             # aplica de verdad
-npm run seiri -- apply migrations/2026-10-24_auth.json --allow-duplicates
+npx tsx src/cli.ts apply migrations/2026-10-24_auth.json --dry-run   # plan, sin red ni escrituras
+npx tsx src/cli.ts apply migrations/2026-10-24_auth.json             # aplica de verdad
+npx tsx src/cli.ts apply migrations/2026-10-24_auth.json --allow-duplicates
 ```
 
 Garantías:

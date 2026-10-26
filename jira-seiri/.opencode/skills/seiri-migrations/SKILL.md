@@ -21,12 +21,12 @@ metadata:
 
 ## Workflow
 
-1. Refresh context: `npm run seiri -- pull <proyecto>`.
+1. Refresh context: `npx tsx src/cli.ts pull <proyecto>`.
 2. Read `projects/<proyecto>/.jira_context.md`.
 3. Draft each item with `jira-issue-writing` and `jira-hierarchy`.
 4. Check for duplicates against existing keys and summaries in the context.
 5. Write `migrations/YYYY-MM-DD_<slug>.json`.
-6. Run `npm run seiri -- validate migrations/<archivo>.json`.
+6. Run `npx tsx src/cli.ts validate migrations/<archivo>.json`.
 7. Run `apply` only after the user explicitly approves.
 
 ## Contract v1
@@ -101,12 +101,12 @@ Before writing an item:
 ## Commands
 
 ```bash
-npm run seiri -- pull endogastro
-npm run seiri -- validate migrations/2026-10-24_auth.json
-npm run seiri -- validate migrations/2026-10-24_auth.json --threshold 90
-npm run seiri -- validate migrations/2026-10-24_auth.json --json
-npm run seiri -- apply migrations/2026-10-24_auth.json --dry-run
-npm run seiri -- apply migrations/2026-10-24_auth.json
+npx tsx src/cli.ts pull endogastro
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json --threshold 90
+npx tsx src/cli.ts validate migrations/2026-10-24_auth.json --json
+npx tsx src/cli.ts apply migrations/2026-10-24_auth.json --dry-run
+npx tsx src/cli.ts apply migrations/2026-10-24_auth.json
 ```
 
 `validate` never touches the network. `apply --dry-run` shows the plan without network or writes. `apply` revalidates internally and refuses to run with duplicate warnings unless `--allow-duplicates` is passed; run it only with explicit human approval.

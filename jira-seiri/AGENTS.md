@@ -44,11 +44,11 @@ Las skills siguen el formato Agent Skills (`SKILL.md` + frontmatter). opencode l
 ## Comandos
 
 ```bash
-npm run seiri -- init <proyecto>
-npm run seiri -- pull <proyecto>
-npm run seiri -- validate migrations/<archivo>.json
-npm run seiri -- apply migrations/<archivo>.json --dry-run
-npm run seiri -- apply migrations/<archivo>.json
+npx tsx src/cli.ts init <proyecto>
+npx tsx src/cli.ts pull <proyecto>
+npx tsx src/cli.ts validate migrations/<archivo>.json
+npx tsx src/cli.ts apply migrations/<archivo>.json --dry-run
+npx tsx src/cli.ts apply migrations/<archivo>.json
 ```
 
 `init`, `pull`, `validate` y `apply` están disponibles.
