@@ -1,0 +1,43 @@
+{
+  "project": "endogastro",
+  "description": "Lanzamiento de la web v2: DNS, migración de SEO y Libro de Reclamaciones",
+  "source": "Reporte del administrador, 2026-10-25",
+  "items": [
+    {
+      "local_ref": "web-launch-dns",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[DEVOPS] Lanzar la nueva web y cambiar el DNS al dominio nuevo, validando la propagación",
+      "description": "## Contexto\nLa nueva versión del sitio web fue lanzada y se cambió el DNS para apuntar al dominio nuevo.\n\n## Criterios de aceptación\n- [x] Nueva web desplegada y accesible desde el dominio nuevo\n- [x] DNS actualizado y propagación validada\n- [x] Sitio y rutas principales funcionando sobre el dominio nuevo\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-203",
+      "priority": "Highest"
+    },
+    {
+      "local_ref": "seo-domain-migration",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[SEO] Migrar el SEO al dominio nuevo con redirects 301, sitemap y ajustes en Search Console",
+      "description": "## Contexto\nCon el cambio de dominio se migró el SEO de la web anterior a la nueva versión para no perder posicionamiento.\n\n## Criterios de aceptación\n- [x] Redirects 301 configurados desde las URLs anteriores\n- [x] Sitemap actualizado y enviado\n- [x] Propiedad y ajustes aplicados en Search Console\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-203",
+      "priority": "High"
+    },
+    {
+      "local_ref": "libro-reclamaciones-backend",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[BACKEND] Crear la API y persistencia del Libro de Reclamaciones en la web v2",
+      "description": "## Contexto\nLa web v2 requiere el Libro de Reclamaciones con persistencia y consulta de los reclamos registrados por los usuarios.\n\n## Criterios de aceptación\n- [x] API para registrar reclamos desde la web v2\n- [x] Persistencia de los reclamos\n- [x] Validaciones de los datos obligatorios\n- [x] Consulta de reclamos registrados\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-203",
+      "priority": "High"
+    },
+    {
+      "local_ref": "libro-reclamaciones-frontend",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[FRONTEND] Crear el formulario público del Libro de Reclamaciones en la web v2",
+      "description": "## Contexto\nEl Libro de Reclamaciones debe estar disponible para los usuarios desde la web v2.\n\n## Criterios de aceptación\n- [x] Formulario público accesible desde la web v2\n- [x] Validaciones en el cliente\n- [x] Confirmación y constancia del reclamo registrado\n\n## Estado\nCompletado; pendiente de mover a Done en Jira.",
+      "parent": "ENG-203",
+      "priority": "High"
+    }
+  ]
+}
