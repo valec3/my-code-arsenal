@@ -1,0 +1,24 @@
+{
+  "project": "endogastro",
+  "description": "Épica permanente y bucket semanal para tareas rápidas surgidas de conversaciones",
+  "source": "Recomendación aprobada por el administrador, 2026-10-26",
+  "items": [
+    {
+      "local_ref": "quick-epic",
+      "action": "CREATE",
+      "type": "Epic",
+      "summary": "ÉPICA: Tareas Rápidas y Operativas",
+      "description": "## Propósito\nConcentrar las tareas cortas que surgen de conversaciones y reuniones semanales, para que no se pierdan ni ensucien las épicas de dominio.\n\n## Qué entra\n- Acción concreta de hasta 60 minutos.\n- Sin diseño ni criterios de aceptación propios.\n- Trabajo operativo, administrativo o de ajuste puntual que no pertenece a una Story existente.\n\n## Qué NO entra\n- Funcionalidad con valor de usuario: va como Story en su épica de dominio.\n- Trabajo que encaja en una Story existente: va como Subtask de esa Story.\n- Proyectos de más de medio día: se promueven a Story.\n\n## Reglas\n- Cada semana tiene un bucket propio: `Semana YYYY-Www (rango de fechas)` como Task.\n- Máximo 5 a 7 tareas por semana; si se supera, no son rápidas.\n- Regla de las 2 semanas: lo que sigue pendiente tras dos semanas se promueve a Story o se descarta.\n- Al cerrar la semana, el bucket pasa a Done; lo pendiente se mueve a la semana siguiente.\n- Prioridad Medium por defecto; Highest solo si bloquea una entrega.",
+      "priority": "Medium"
+    },
+    {
+      "local_ref": "quick-week-w44",
+      "action": "CREATE",
+      "type": "Task",
+      "summary": "Semana 2026-W44 (26 oct – 01 nov)",
+      "description": "## Contexto\nBucket semanal de tareas rápidas y operativas. Se completa durante el triage de las conversaciones de la semana.\n\n## Convención\n- Cada tarea entra como Subtask con prefijo `[QUICK]`.\n- Si una tarea encaja en una Story existente, va como Subtask de esa Story y no acá.\n- Si requiere criterios de aceptación o más de medio día, se promueve a Story.\n\n## Cierre\nEl viernes se mueve el bucket a Done. Lo pendiente se traslada a la semana siguiente o se descarta.",
+      "parent": "quick-epic",
+      "priority": "Medium"
+    }
+  ]
+}
