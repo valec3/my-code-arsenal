@@ -10,6 +10,7 @@ import { registerUsersCommand } from './commands/users';
 import { registerAssignCommand } from './commands/assign';
 import { registerSprintsCommand } from './commands/sprints';
 import { registerSprintCreateCommand } from './commands/sprint-create';
+import { registerSprintStartCommand } from './commands/sprint-start';
 import { registerSprintMoveCommand } from './commands/sprint-move';
 import { SeiriError } from './domain/errors';
 import { EXIT, exitCodeFor } from './shared/exit-codes';
@@ -32,6 +33,7 @@ registerUsersCommand(program);
 registerAssignCommand(program);
 registerSprintsCommand(program);
 registerSprintCreateCommand(program);
+registerSprintStartCommand(program);
 registerSprintMoveCommand(program);
 
 program.addHelpText(
@@ -51,7 +53,9 @@ ${pc.bold('Flujo de trabajo:')}
   9. seiri sprints <proyecto>    lista boards con sprints y sprints
  10. seiri sprint-create <proyecto> --name <nombre> [--start YYYY-MM-DD] [--end YYYY-MM-DD]
                                   crea un sprint futuro
- 11. seiri sprint-move <proyecto> <sprintId> <keys...>
+ 11. seiri sprint-start <proyecto> <sprintId>
+                                  inicia un sprint futuro
+ 12. seiri sprint-move <proyecto> <sprintId> <keys...>
                                   mueve issues a un sprint
 
 Seiri nunca crea nada sin un archivo de migracion revisado.

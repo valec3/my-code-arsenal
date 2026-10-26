@@ -19,3 +19,10 @@ export interface CreateSprintInput {
   startDate?: string;
   endDate?: string;
 }
+
+export interface StartSprintInput {
+  id: number;
+  name: string;
+  startDate?: string | null;
+  endDate?: string | null;
+}

@@ -57,6 +57,10 @@ export class JiraHttpClient {
     return this.request<T>(() => this.agile.post<T>(path, body), false);
   }
 
+  agilePut<T>(path: string, body: unknown): Promise<T> {
+    return this.request<T>(() => this.agile.put<T>(path, body), true);
+  }
+
   private async request<T>(
     operation: () => Promise<{ data: T }>,
     allowServerErrors: boolean

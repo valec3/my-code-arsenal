@@ -429,4 +429,37 @@ describe('HttpJiraGateway', () => {
     expect(sprint).toMatchObject({ id: 37, name: 'Verificacion', boardId: 2 });
     expect(scope.isDone()).toBe(true);
   });
+
+  it('inicia un sprint', async () => {
+    let body: any;
+    const scope = nock(HOST)
+      .put(`${API_AGILE}/sprint/69`, (payload) => {
+        body = payload;
+        return true;
+      })
+      .reply(200, {
+        id: 69,
+        name: 'Verificacion',
+        state: 'active',
+        startDate: '2026-10-26T00:00:00.000Z',
+        endDate: '2026-11-01T00:00:00.000Z',
+        originBoardId: 2,
+      });
+
+    const sprint = await buildGateway().startSprint({
+      id: 69,
+      name: 'Verificacion',
+      startDate: '2026-10-26T00:00:00.000Z',
+      endDate: '2026-11-01T00:00:00.000Z',
+    });
+
+    expect(body).toEqual({
+      name: 'Verificacion',
+      state: 'active',
+      startDate: '2026-10-26T00:00:00.000Z',
+      endDate: '2026-11-01T00:00:00.000Z',
+    });
+    expect(sprint).toMatchObject({ id: 69, state: 'active', boardId: 2 });
+    expect(scope.isDone()).toBe(true);
+  });
 });

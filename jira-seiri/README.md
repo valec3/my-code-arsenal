@@ -26,14 +26,14 @@ La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en 
 
 ## Estado
 
-Fase 9 — `sprint-create`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users`, `seiri assign`, `seiri sprints`, `seiri sprint-create` y `seiri sprint-move`.
+Fase 10 — `sprint-start`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users`, `seiri assign`, `seiri sprints`, `seiri sprint-create`, `seiri sprint-start` y `seiri sprint-move`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
 - `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
 - `transition` mueve issues existentes a otro estado usando las transiciones del workflow, sin inventar IDs.
 - `users` lista los usuarios asignables del proyecto y `assign` asigna issues existentes por `accountId`.
-- `sprints` lista los boards con sprints y sus sprints; `sprint-create` crea un sprint futuro y `sprint-move` mueve issues existentes a un sprint.
+- `sprints` lista los boards con sprints y sus sprints; `sprint-create` crea un sprint futuro, `sprint-start` lo inicia y `sprint-move` mueve issues existentes a un sprint.
 
 ## Requisitos
 
@@ -264,6 +264,31 @@ Requiere el permiso **Manage sprints**.
 | `1` | El proyecto no tiene board con sprints o falló la API |
 | `2` | Nombre, fechas o board inválidos |
 
+### sprint-start
+
+Inicia un sprint en estado `future`. Si ya está `active`, lo saltea; si está `closed`, falla.
+
+```bash
+npx tsx src/cli.ts sprint-start endogastro 69 --dry-run
+npx tsx src/cli.ts sprint-start endogastro 69
+npx tsx src/cli.ts sprint-start endogastro 69 --json
+```
+
+Garantías:
+
+- **Idempotente:** si el sprint ya está activo, no vuelve a llamar a Jira.
+- **Dry-run:** resuelve el sprint y muestra el plan sin iniciarlo.
+- **Sprint cerrado:** no se puede reiniciar.
+- **Un solo activo:** si el board no tiene sprints paralelos, Jira puede rechazar el inicio mientras otro sprint siga activo.
+
+Requiere el permiso **Manage sprints**.
+
+| Exit | Significado |
+|---|---|
+| `0` | Sprint iniciado, ya activo o dry-run |
+| `1` | El proyecto no tiene board con sprints o falló la API |
+| `2` | Sprint inexistente, cerrado o ID inválido |
+
 ### sprint-move
 
 Mueve issues existentes a un sprint. Valida que el sprint exista en un board Scrum del proyecto y que no esté cerrado antes de escribir.
@@ -297,7 +322,7 @@ Requiere el permiso **Manage sprints** y que las issues pertenezcan al board.
 3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
 4. Si hace falta mover estados, usá `seiri transition` con `--dry-run` primero.
 5. Para asignar responsables, listá con `seiri users` y después usá `seiri assign` con el `accountId`.
-6. Para planificar el trabajo, listá con `seiri sprints`, creá uno con `seiri sprint-create` y mové issues con `seiri sprint-move`.
+6. Para planificar el trabajo, listá con `seiri sprints`, creá uno con `seiri sprint-create`, iniciálo con `seiri sprint-start` y mové issues con `seiri sprint-move`.
 
 ## Skills y agentes
 

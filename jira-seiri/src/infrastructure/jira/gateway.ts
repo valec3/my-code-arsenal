@@ -1,6 +1,11 @@
 import { SeiriError } from '../../domain/errors';
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../../domain/issue';
-import type { CreateSprintInput, JiraBoard, JiraSprint } from '../../domain/sprint';
+import type {
+  CreateSprintInput,
+  JiraBoard,
+  JiraSprint,
+  StartSprintInput,
+} from '../../domain/sprint';
 import type { IssueTransition } from '../../domain/transition';
 import type { JiraUser } from '../../domain/user';
 import type { JiraGateway } from '../../ports/jira-gateway';
@@ -278,6 +283,25 @@ export class HttpJiraGateway implements JiraGateway {
 
     const dto = await this.http.agilePost<JiraSprintDto>('/sprint', payload);
     return this.mapSprint(dto, input.boardId);
+  }
+
+  async startSprint(input: StartSprintInput): Promise<JiraSprint> {
+    const payload: Record<string, unknown> = {
+      name: input.name,
+      state: 'active',
+    };
+    if (input.startDate) {
+      payload.startDate = input.startDate;
+    }
+    if (input.endDate) {
+      payload.endDate = input.endDate;
+    }
+
+    const dto = await this.http.agilePut<JiraSprintDto>(
+      `/sprint/${input.id}`,
+      payload
+    );
+    return this.mapSprint(dto, dto.originBoardId ?? 0);
   }
 
   async moveIssuesToSprint(sprintId: number, keys: readonly string[]): Promise<void> {
