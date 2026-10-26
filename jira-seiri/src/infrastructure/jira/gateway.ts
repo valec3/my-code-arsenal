@@ -64,6 +64,11 @@ export class HttpJiraGateway implements JiraGateway {
     return issues;
   }
 
+  async getIssue(key: string): Promise<Issue> {
+    const dto = await this.http.get<JiraIssueDto>(`/issue/${encodeURIComponent(key)}`);
+    return this.mapIssue(dto);
+  }
+
   async getIssueTypes(projectKey: string): Promise<IssueType[]> {
     const types: IssueType[] = [];
     let startAt = 0;

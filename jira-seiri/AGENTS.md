@@ -46,13 +46,16 @@ Las skills siguen el formato Agent Skills (`SKILL.md` + frontmatter). opencode l
 ```bash
 npm run seiri -- init <proyecto>
 npm run seiri -- pull <proyecto>
-npm run seiri -- validate migrations/<archivo>.json   # disponible
-npm run seiri -- apply migrations/<archivo>.json      # fase 5
+npm run seiri -- validate migrations/<archivo>.json
+npm run seiri -- apply migrations/<archivo>.json --dry-run
+npm run seiri -- apply migrations/<archivo>.json
 ```
 
-`init`, `pull` y `validate` están disponibles. `apply` se habilita en la fase 5.
+`init`, `pull`, `validate` y `apply` están disponibles.
 
 `validate` sale con `0` si está limpio, `2` ante errores de contrato/jerarquía/parent y `3` si detecta duplicados posibles. Nunca toca la red.
+
+`apply` valida de nuevo antes de tocar Jira. Con `--dry-run` muestra el plan sin red ni escrituras. Sin `--allow-duplicates` aborta con exit `3` si hay duplicados, y si una corrida falla a mitad queda en `PARTIAL` (exit `4`) para retomarla sin recrear lo ya hecho.
 
 ## Portabilidad
 

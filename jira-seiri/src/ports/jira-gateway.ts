@@ -4,6 +4,7 @@ export interface JiraGateway {
   getMyself(): Promise<{ displayName: string; emailAddress: string }>;
   getProject(key: string): Promise<{ key: string; name: string }>;
   searchIssues(jql: string, fields: readonly string[]): Promise<Issue[]>;
+  getIssue(key: string): Promise<Issue>;
   getIssueTypes(projectKey: string): Promise<IssueType[]>;
   getFields(): Promise<JiraField[]>;
   createIssue(input: CreateIssueInput): Promise<{ key: string; id: string }>;

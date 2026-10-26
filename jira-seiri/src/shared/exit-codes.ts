@@ -3,6 +3,7 @@ export const EXIT = {
   UNEXPECTED: 1,
   VALIDATION: 2,
   DUPLICATE: 3,
+  PARTIAL: 4,
 } as const;
 
 const CODE_TO_EXIT: Record<string, number> = {
@@ -13,6 +14,7 @@ const CODE_TO_EXIT: Record<string, number> = {
   JIRA: EXIT.UNEXPECTED,
   VALIDATION: EXIT.VALIDATION,
   DUPLICATE: EXIT.DUPLICATE,
+  APPLY: EXIT.PARTIAL,
   UNEXPECTED: EXIT.UNEXPECTED,
 };
 

@@ -6,6 +6,7 @@ export type SeiriErrorCode =
   | 'JIRA'
   | 'VALIDATION'
   | 'DUPLICATE'
+  | 'APPLY'
   | 'UNEXPECTED';
 
 export class SeiriError extends Error {

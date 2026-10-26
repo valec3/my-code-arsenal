@@ -43,6 +43,8 @@ export interface ValidateOptions {
   file: string;
   threshold?: number;
   candidates?: number;
+  ignoreRefs?: readonly string[];
+  ignoreKeys?: readonly string[];
 }
 
 const DEFAULT_THRESHOLD = 80;
@@ -56,6 +58,8 @@ export function validateMigration(
 ): ValidationReport {
   const threshold = options.threshold ?? DEFAULT_THRESHOLD;
   const candidates = options.candidates ?? DEFAULT_CANDIDATES;
+  const ignoreRefs = new Set(options.ignoreRefs ?? []);
+  const ignoreKeys = new Set(options.ignoreKeys ?? []);
   const errors: ValidationError[] = [];
   const duplicates: DuplicateFinding[] = [];
 
@@ -64,7 +68,7 @@ export function validateMigration(
   const refMap = new Map(migration.items.map((item) => [item.local_ref, item]));
 
   collectCycles(refMap, errors);
-  collectInFileDuplicates(migration.items, threshold, duplicates);
+  collectInFileDuplicates(migration.items, threshold, duplicates, ignoreRefs);
 
   if (!projectKey) {
     return report(migration, options.file, errors, duplicates, threshold, itemCount, null);
@@ -122,7 +126,18 @@ export function validateMigration(
   }
 
   for (const item of migration.items) {
-    const found = findExistingDuplicates(deps.store, projectKey, item, threshold, candidates);
+    if (ignoreRefs.has(item.local_ref)) {
+      continue;
+    }
+
+    const found = findExistingDuplicates(
+      deps.store,
+      projectKey,
+      item,
+      threshold,
+      candidates,
+      ignoreKeys
+    );
     duplicates.push(...found);
   }
 
@@ -219,11 +234,16 @@ function findExistingDuplicates(
   projectKey: string,
   item: MigrationItem,
   threshold: number,
-  candidates: number
+  candidates: number,
+  ignoreKeys: ReadonlySet<string>
 ): DuplicateFinding[] {
   const found: DuplicateFinding[] = [];
 
   for (const candidate of store.searchSimilar(projectKey, item.summary, candidates)) {
+    if (ignoreKeys.has(candidate.key)) {
+      continue;
+    }
+
     const score = similarityPercent(item.summary, candidate.summary);
     if (score >= threshold) {
       found.push({
@@ -245,10 +265,18 @@ function findExistingDuplicates(
 function collectInFileDuplicates(
   items: readonly MigrationItem[],
   threshold: number,
-  duplicates: DuplicateFinding[]
+  duplicates: DuplicateFinding[],
+  ignoreRefs: ReadonlySet<string>
 ): void {
   for (let left = 0; left < items.length; left++) {
     for (let right = left + 1; right < items.length; right++) {
+      if (
+        ignoreRefs.has(items[left].local_ref) ||
+        ignoreRefs.has(items[right].local_ref)
+      ) {
+        continue;
+      }
+
       const score = similarityPercent(items[left].summary, items[right].summary);
       if (score >= threshold) {
         duplicates.push({

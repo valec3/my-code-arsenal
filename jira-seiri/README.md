@@ -23,12 +23,11 @@ La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en 
 
 ## Estado
 
-Fase 4 — `validate`. Disponible: `seiri init`, `seiri pull` y `seiri validate`.
+Fase 5 — `apply`. Disponible: `seiri init`, `seiri pull`, `seiri validate` y `seiri apply`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
-
-`apply` llega en la fase 5.
+- `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
 
 ## Requisitos
 
@@ -124,11 +123,37 @@ El umbral default es 80% y se ajusta con `--threshold`. `--json` devuelve el rep
 | `2` | Error de contrato, jerarquía o parent: no aplicar |
 | `3` | Duplicados posibles: reusar la key o subir el umbral |
 
+### apply
+
+Aplica la migración en Jira y actualiza el cache local. Vuelve a correr `validate` internamente antes de tocar la red.
+
+```bash
+npm run seiri -- apply migrations/2026-10-24_auth.json --dry-run   # plan, sin red ni escrituras
+npm run seiri -- apply migrations/2026-10-24_auth.json             # aplica de verdad
+npm run seiri -- apply migrations/2026-10-24_auth.json --allow-duplicates
+```
+
+Garantías:
+
+- **Idempotente:** el nombre del archivo es la PK en `migrations`. Si ya está en `SUCCESS` con el mismo checksum (SHA-256), no hace nada.
+- **Retomable:** si una corrida queda en `PARTIAL`, la siguiente saltea los items ya `CREATED` y sigue desde el fallido, reusando las keys reales como parent.
+- **Sin duplicados silenciosos:** si `validate` encuentra duplicados, aborta con exit `3` salvo `--allow-duplicates`.
+- **Credenciales tardías:** el `.env` se carga recién cuando hay algo para crear. `--dry-run` y los abortos de validación funcionan sin red ni credenciales.
+- **Trazabilidad:** cada operación queda en `migration_items` con su `local_ref`, key creada, estado y error.
+- **Cache al día:** cada issue creada se relee desde Jira y se upsertea en SQLite (con FTS5 actualizado por triggers).
+
+| Exit | Significado |
+|---|---|
+| `0` | Aplicada, ya aplicada (skip) o dry-run |
+| `2` | Contrato, jerarquía, parent o checksum distinto |
+| `3` | Duplicados sin `--allow-duplicates` |
+| `4` | Resultado parcial: corregí el error y volvé a correr |
+
 ## Después del pull
 
 1. Abrí `projects/endogastro/.jira_context.md` y verificá que estén tus epics, stories y subtasks con sus estados.
 2. Ese archivo es el contexto que el agente usará para escribir migraciones sin duplicar tickets.
-3. Escribí la migración, corré `seiri validate` y resolvé lo que marque. `apply` todavía no existe: llega en la fase 5.
+3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
 
 ## Skills y agentes
 
@@ -140,7 +165,7 @@ Abrí opencode desde `jira-seiri/` (no desde la raíz del arsenal) y, si ya esta
 
 ## Arquitectura
 
-Hexagonal-lite. Las dependencias apuntan hacia adentro y hay un puerto por frontera real: Jira API e issues. El de migraciones llega con `apply`.
+Hexagonal-lite. Las dependencias apuntan hacia adentro y hay un puerto por frontera real: Jira API, issues y migraciones.
 
 ```text
 commands  ->  application  ->  domain
@@ -161,7 +186,7 @@ schema.sql                     esquema completo e idempotente
 src/
   cli.ts                       composition root + manejo de errores
   commands/                    un archivo por comando (delgados)
-  application/                 casos de uso: init, pull, contexto, validate
+  application/                 casos de uso: init, pull, contexto, validate, apply
   domain/                      reglas puras: errores, contrato v1, jerarquia, similitud
   config/                      rutas y carga de .env
   shared/                      logger y exit codes

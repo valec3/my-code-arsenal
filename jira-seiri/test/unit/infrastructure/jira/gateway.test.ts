@@ -77,6 +77,20 @@ describe('HttpJiraGateway', () => {
     });
   });
 
+  it('obtiene una issue puntual por key', async () => {
+    nock(HOST).get(`${API}/issue/ENG-5`).reply(200, issueDto('ENG-5', 'Detalle'));
+
+    const issue = await buildGateway().getIssue('ENG-5');
+
+    expect(issue).toMatchObject({
+      key: 'ENG-5',
+      projectKey: 'ENG',
+      summary: 'Detalle',
+      status: 'To Do',
+      hierarchyLevel: 0,
+    });
+  });
+
   it('reintenta un 429 y termina bien', async () => {
     nock(HOST).get(`${API}/myself`).reply(429, {}, { 'Retry-After': '0' });
     nock(HOST)

@@ -4,6 +4,7 @@ import pc from 'picocolors';
 import { registerInitCommand } from './commands/init';
 import { registerPullCommand } from './commands/pull';
 import { registerValidateCommand } from './commands/validate';
+import { registerApplyCommand } from './commands/apply';
 import { SeiriError } from './domain/errors';
 import { EXIT, exitCodeFor } from './shared/exit-codes';
 
@@ -19,6 +20,7 @@ program
 registerInitCommand(program);
 registerPullCommand(program);
 registerValidateCommand(program);
+registerApplyCommand(program);
 
 program.addHelpText(
   'after',
@@ -30,7 +32,7 @@ ${pc.bold('Flujo de trabajo:')}
   4. seiri validate <archivo>    chequeos locales, sin red
   5. seiri apply <archivo>       Jira -> SQLite (idempotente)
 
-Disponible hoy: init, pull, validate. apply se habilita en la fase 5.
+Seiri nunca crea nada sin un archivo de migracion revisado.
 `
 );
 

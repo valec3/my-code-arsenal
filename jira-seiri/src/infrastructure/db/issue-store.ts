@@ -122,6 +122,10 @@ export class SqliteIssueStore implements IssueStore {
     return row.count;
   }
 
+  upsertIssue(issue: Issue): void {
+    this.db.prepare(UPSERT_ISSUE).run(toIssueParams(issue));
+  }
+
   getIssue(key: string): Issue | null {
     const row = this.db
       .prepare(`SELECT ${ISSUE_COLUMNS} FROM issues WHERE key = ?`)

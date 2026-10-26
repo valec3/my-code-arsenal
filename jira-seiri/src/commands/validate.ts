@@ -1,15 +1,13 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import type { Command } from 'commander';
-import pc from 'picocolors';
-import { parseMigration } from '../application/migration-schema';
 import { validateMigration, type ValidationReport } from '../application/validate-migration';
-import { projectDbPath } from '../config/paths';
-import { SeiriError } from '../domain/errors';
-import { applySchema, closeDatabase, listTables, openDatabase } from '../infrastructure/db/connection';
+import { closeDatabase } from '../infrastructure/db/connection';
 import { SqliteIssueStore } from '../infrastructure/db/issue-store';
 import { EXIT } from '../shared/exit-codes';
 import { log } from '../shared/logger';
+import { parseThreshold } from '../shared/parse';
+import { loadMigrationFile } from './load-migration';
+import { openProjectDatabase } from './project-db';
 
 interface ValidateCommandOptions {
   threshold: string;
@@ -25,35 +23,14 @@ export function registerValidateCommand(program: Command): void {
     .option('--json', 'salida JSON para agentes', false)
     .action((file: string, options: ValidateCommandOptions) => {
       const threshold = parseThreshold(options.threshold);
-      const migrationPath = path.resolve(process.cwd(), file);
+      const loaded = loadMigrationFile(file);
+      const { db } = openProjectDatabase(loaded.migration.project);
 
-      const migration = parseMigration(readJson(migrationPath));
-      const dbPath = projectDbPath(migration.project);
-
-      if (!fs.existsSync(dbPath)) {
-        throw new SeiriError(
-          `No existe la base local del proyecto "${migration.project}".`,
-          'CONFIG',
-          `Corre seiri init ${migration.project} y despues seiri pull ${migration.project}.`
-        );
-      }
-
-      const db = openDatabase(dbPath);
       try {
-        const tables = listTables(db);
-        if (!tables.includes('issues') || !tables.includes('issue_types')) {
-          throw new SeiriError(
-            `La base de "${migration.project}" no tiene el esquema de seiri.`,
-            'CONFIG',
-            `Corre seiri pull ${migration.project} para inicializarla.`
-          );
-        }
-        applySchema(db);
-
         const report = validateMigration(
           { store: new SqliteIssueStore(db) },
-          migration,
-          { file: migrationPath, threshold }
+          loaded.migration,
+          { file: loaded.path, threshold }
         );
 
         const exitCode = report.errors.length > 0
@@ -73,32 +50,6 @@ export function registerValidateCommand(program: Command): void {
         closeDatabase(db);
       }
     });
-}
-
-function readJson(filePath: string): unknown {
-  if (!fs.existsSync(filePath)) {
-    throw new SeiriError(`No existe el archivo ${filePath}`, 'CONFIG');
-  }
-
-  const raw = fs.readFileSync(filePath, 'utf8');
-
-  try {
-    return JSON.parse(raw);
-  } catch (error) {
-    throw new SeiriError(
-      `JSON invalido en ${path.basename(filePath)}: ${messageOf(error)}`,
-      'VALIDATION'
-    );
-  }
-}
-
-function parseThreshold(value: string): number {
-  const parsed = Number.parseInt(value, 10);
-  if (!Number.isFinite(parsed) || parsed < 0 || parsed > 100) {
-    throw new SeiriError('--threshold debe ser un entero entre 0 y 100', 'VALIDATION');
-  }
-
-  return parsed;
 }
 
 function printReport(report: ValidationReport): void {
@@ -139,9 +90,5 @@ function printReport(report: ValidationReport): void {
     return;
   }
 
-  log.success('Validacion limpia. Listo para seiri apply (fase 5).');
-}
-
-function messageOf(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  log.success('Validacion limpia. Listo para seiri apply.');
 }

@@ -16,6 +16,7 @@ export interface IssueStore {
   saveSnapshot(snapshot: ProjectSnapshot): void;
   listIssues(projectKey: string): Issue[];
   countIssues(projectKey: string): number;
+  upsertIssue(issue: Issue): void;
   getIssue(key: string): Issue | null;
   listIssueTypes(projectKey: string): IssueType[];
   searchSimilar(projectKey: string, text: string, limit?: number): SimilarIssue[];

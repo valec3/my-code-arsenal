@@ -93,9 +93,10 @@ Before writing an item:
 
 | Exit | Meaning | What to do |
 |---|---|---|
-| `0` | Clean | Ready for `apply` |
-| `2` | Contract, hierarchy, or parent error | Fix the JSON; do not apply |
+| `0` | Clean, or already applied with the same checksum | Ready |
+| `2` | Contract, hierarchy, parent, or checksum mismatch | Fix the JSON or create a new file |
 | `3` | Possible duplicates above `--threshold` | Reuse the existing key or raise the threshold |
+| `4` | Partial apply | Fix the error and rerun: it resumes from the failed item |
 
 ## Commands
 
@@ -104,10 +105,11 @@ npm run seiri -- pull endogastro
 npm run seiri -- validate migrations/2026-10-24_auth.json
 npm run seiri -- validate migrations/2026-10-24_auth.json --threshold 90
 npm run seiri -- validate migrations/2026-10-24_auth.json --json
+npm run seiri -- apply migrations/2026-10-24_auth.json --dry-run
 npm run seiri -- apply migrations/2026-10-24_auth.json
 ```
 
-`validate` is available now and never touches the network. `apply` arrives in phase 5.
+`validate` never touches the network. `apply --dry-run` shows the plan without network or writes. `apply` revalidates internally and refuses to run with duplicate warnings unless `--allow-duplicates` is passed; run it only with explicit human approval.
 
 ## Resources
 
