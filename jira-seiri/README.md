@@ -26,12 +26,13 @@ La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en 
 
 ## Estado
 
-Fase 6 — `transition`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply` y `seiri transition`.
+Fase 7 — `users` y `assign`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users` y `seiri assign`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
 - `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
 - `transition` mueve issues existentes a otro estado usando las transiciones del workflow, sin inventar IDs.
+- `users` lista los usuarios asignables del proyecto y `assign` asigna issues existentes por `accountId`.
 
 ## Requisitos
 
@@ -177,12 +178,49 @@ Garantías:
 | `2` | Ninguna se pudo mover (workflow o keys inválidas) |
 | `4` | Parcial: mover las que quedaron y volver a correr |
 
+### users
+
+Lista los usuarios asignables del proyecto con su `accountId`. Jira Cloud suele ocultar el email por privacidad; en ese caso se muestra `(email oculto)`.
+
+```bash
+npx tsx src/cli.ts users endogastro
+npx tsx src/cli.ts users endogastro --json
+```
+
+Requiere el permiso **Browse users and groups**. Si la lista sale vacía, revisá ese permiso en Jira.
+
+### assign
+
+Asigna issues existentes a un usuario por `accountId`. No se asigna por email ni por nombre: el `accountId` es el identificador estable de Jira Cloud.
+
+```bash
+npx tsx src/cli.ts assign endogastro <accountId> ENG-346 ENG-347 --dry-run
+npx tsx src/cli.ts assign endogastro <accountId> ENG-346 ENG-347
+npx tsx src/cli.ts assign endogastro <accountId> ENG-346 --json
+```
+
+Garantías:
+
+- **Sin inventos:** solo usa el `accountId` recibido; no resuelve nombres ni emails.
+- **Parcial:** si una issue falla, sigue con las demás y devuelve exit `4`; si todas fallan, exit `2`.
+- **Dry-run:** muestra el plan sin escribir en Jira.
+- **Cache:** la asignación no se guarda en SQLite; `assign` no modifica el cache.
+
+Requiere el permiso **Assign issues** sobre el proyecto.
+
+| Exit | Significado |
+|---|---|
+| `0` | Todas asignadas o dry-run |
+| `2` | Ninguna se pudo asignar |
+| `4` | Parcial: asignar las que quedaron y volver a correr |
+
 ## Después del pull
 
 1. Abrí `projects/endogastro/.jira_context.md` y verificá que estén tus epics, stories y subtasks con sus estados.
 2. Ese archivo es el contexto que el agente usará para escribir migraciones sin duplicar tickets.
 3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
 4. Si hace falta mover estados, usá `seiri transition` con `--dry-run` primero.
+5. Para asignar responsables, listá con `seiri users` y después usá `seiri assign` con el `accountId`.
 
 ## Skills y agentes
 
@@ -215,7 +253,7 @@ schema.sql                     esquema completo e idempotente
 src/
   cli.ts                       composition root + manejo de errores
   commands/                    un archivo por comando (delgados)
-  application/                 casos de uso: init, pull, contexto, validate, apply, transition
+  application/                 casos de uso: init, pull, contexto, validate, apply, transition, assign
   domain/                      reglas puras: errores, contrato v1, jerarquia, similitud
   config/                      rutas y carga de .env
   shared/                      logger y exit codes

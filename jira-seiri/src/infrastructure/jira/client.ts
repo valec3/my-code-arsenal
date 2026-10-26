@@ -40,6 +40,10 @@ export class JiraHttpClient {
     return this.request<T>(() => this.http.post<T>(path, body), false);
   }
 
+  put<T>(path: string, body: unknown): Promise<T> {
+    return this.request<T>(() => this.http.put<T>(path, body), true);
+  }
+
   delete(path: string): Promise<void> {
     return this.request<void>(() => this.http.delete(path), true);
   }

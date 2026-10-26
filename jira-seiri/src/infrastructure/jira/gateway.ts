@@ -1,6 +1,7 @@
 import { SeiriError } from '../../domain/errors';
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../../domain/issue';
 import type { IssueTransition } from '../../domain/transition';
+import type { JiraUser } from '../../domain/user';
 import type { JiraGateway } from '../../ports/jira-gateway';
 import { adfToPlainText, plainTextToAdf } from './adf';
 import { JiraHttpClient, type JiraConnectionConfig } from './client';
@@ -12,6 +13,7 @@ import type {
   JiraIssueTypesPageDto,
   JiraSearchResponseDto,
   JiraTransitionsResponseDto,
+  JiraUserDto,
 } from './dto';
 
 const PAGE_SIZE = 100;
@@ -160,6 +162,44 @@ export class HttpJiraGateway implements JiraGateway {
       `/issue/${encodeURIComponent(issueKey)}/transitions`,
       { transition: { id: transitionId } }
     );
+  }
+
+  async listAssignableUsers(projectKey: string): Promise<JiraUser[]> {
+    const users: JiraUser[] = [];
+    let startAt = 0;
+
+    for (;;) {
+      const batch = await this.http.get<JiraUserDto[]>('/user/assignable/search', {
+        project: projectKey,
+        startAt,
+        maxResults: PAGE_SIZE,
+      });
+
+      for (const dto of batch ?? []) {
+        if (!dto.accountId) {
+          continue;
+        }
+        users.push({
+          accountId: dto.accountId,
+          displayName: dto.displayName ?? dto.accountId,
+          emailAddress: dto.emailAddress ?? null,
+          active: dto.active ?? true,
+        });
+      }
+
+      if (!batch || batch.length < PAGE_SIZE) {
+        break;
+      }
+      startAt += batch.length;
+    }
+
+    return users;
+  }
+
+  async assignIssue(issueKey: string, accountId: string): Promise<void> {
+    await this.http.put<void>(`/issue/${encodeURIComponent(issueKey)}/assignee`, {
+      accountId,
+    });
   }
 
   private mapIssue(dto: JiraIssueDto): Issue {

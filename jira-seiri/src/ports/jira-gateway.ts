@@ -1,5 +1,6 @@
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../domain/issue';
 import type { IssueTransition } from '../domain/transition';
+import type { JiraUser } from '../domain/user';
 
 export interface JiraGateway {
   getMyself(): Promise<{ displayName: string; emailAddress: string }>;
@@ -11,5 +12,7 @@ export interface JiraGateway {
   createIssue(input: CreateIssueInput): Promise<{ key: string; id: string }>;
   getTransitions(issueKey: string): Promise<IssueTransition[]>;
   transitionIssue(issueKey: string, transitionId: string): Promise<void>;
+  listAssignableUsers(projectKey: string): Promise<JiraUser[]>;
+  assignIssue(issueKey: string, accountId: string): Promise<void>;
   deleteIssue(key: string): Promise<void>;
 }

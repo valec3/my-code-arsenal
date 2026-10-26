@@ -6,6 +6,8 @@ import { registerPullCommand } from './commands/pull';
 import { registerValidateCommand } from './commands/validate';
 import { registerApplyCommand } from './commands/apply';
 import { registerTransitionCommand } from './commands/transition';
+import { registerUsersCommand } from './commands/users';
+import { registerAssignCommand } from './commands/assign';
 import { SeiriError } from './domain/errors';
 import { EXIT, exitCodeFor } from './shared/exit-codes';
 
@@ -23,6 +25,8 @@ registerPullCommand(program);
 registerValidateCommand(program);
 registerApplyCommand(program);
 registerTransitionCommand(program);
+registerUsersCommand(program);
+registerAssignCommand(program);
 
 program.addHelpText(
   'after',
@@ -35,6 +39,9 @@ ${pc.bold('Flujo de trabajo:')}
   5. seiri apply <archivo>       Jira -> SQLite (idempotente)
   6. seiri transition <proyecto> <keys...> --to <estado>
                                  mueve issues segun el workflow
+  7. seiri users <proyecto>      lista usuarios asignables
+  8. seiri assign <proyecto> <accountId> <keys...>
+                                 asigna issues existentes
 
 Seiri nunca crea nada sin un archivo de migracion revisado.
 `

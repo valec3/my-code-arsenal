@@ -62,6 +62,13 @@ export interface JiraTransitionsResponseDto {
   transitions?: JiraTransitionDto[];
 }
 
+export interface JiraUserDto {
+  accountId?: string;
+  displayName?: string;
+  emailAddress?: string;
+  active?: boolean;
+}
+
 export interface JiraErrorDto {
   errorMessages?: string[];
   errors?: Record<string, string>;

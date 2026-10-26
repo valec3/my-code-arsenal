@@ -268,4 +268,50 @@ describe('HttpJiraGateway', () => {
     expect(body).toEqual({ transition: { id: '31' } });
     expect(scope.isDone()).toBe(true);
   });
+
+  it('lista usuarios asignables paginando y tolerando email oculto', async () => {
+    const firstBatch = Array.from({ length: 100 }, (_, index) => ({
+      accountId: `acc-${index}`,
+      displayName: `User ${index}`,
+      emailAddress: `u${index}@acme.com`,
+      active: true,
+    }));
+
+    const first = nock(HOST)
+      .get(`${API}/user/assignable/search`)
+      .query(
+        (query) => query.project === 'ENG' && query.startAt === '0' && query.maxResults === '100'
+      )
+      .reply(200, firstBatch);
+
+    const second = nock(HOST)
+      .get(`${API}/user/assignable/search`)
+      .query((query) => query.project === 'ENG' && query.startAt === '100')
+      .reply(200, [{ accountId: 'acc-100', displayName: 'Sin email', active: false }]);
+
+    const users = await buildGateway().listAssignableUsers('ENG');
+
+    expect(users).toHaveLength(101);
+    expect(users[100]).toEqual({
+      accountId: 'acc-100',
+      displayName: 'Sin email',
+      emailAddress: null,
+      active: false,
+    });
+    expect(first.isDone() && second.isDone()).toBe(true);
+  });
+
+  it('asigna una issue por accountId', async () => {
+    let body: any;
+    const scope = nock(HOST)
+      .put(`${API}/issue/ENG-5/assignee`, (payload) => {
+        body = payload;
+        return true;
+      })
+      .reply(204);
+
+    await expect(buildGateway().assignIssue('ENG-5', 'acc-1')).resolves.toBeUndefined();
+    expect(body).toEqual({ accountId: 'acc-1' });
+    expect(scope.isDone()).toBe(true);
+  });
 });
