@@ -1,0 +1,70 @@
+{
+  "project": "endogastro",
+  "description": "Rediseño del módulo de pagos con webhooks, seguridad y concurrencia; refactor de credenciales para staging en Hetzner",
+  "source": "Conversación con el administrador, 2026-10-26",
+  "items": [
+    {
+      "local_ref": "pagos-story",
+      "action": "CREATE",
+      "type": "Story",
+      "summary": "HU: Rediseño del Módulo de Pagos — Webhooks, Seguridad y Concurrencia",
+      "description": "## Contexto\nSe rediseña el flujo de pagos actual. El backend es compartido por la web y la app mobile, pero cada frontend tiene su propia implementación.\n\n## Alcance\n- Webhooks para confirmar el estado de los pagos.\n- Mejoras de seguridad y manejo de errores.\n- Prevención de condiciones de carrera y procesamiento duplicado.\n\n## Criterios de aceptación\n- [ ] El estado del pago se confirma por webhook, no solo por respuesta síncrona.\n- [ ] Los webhooks validan su origen y firma antes de procesarse.\n- [ ] Un pago no puede confirmarse ni registrarse dos veces por reintentos o solicitudes concurrentes.\n- [ ] Los errores se manejan sin exponer datos sensibles y quedan registrados.\n- [ ] La web y la app mobile reflejan el nuevo flujo y sus estados.",
+      "parent": "ENG-140",
+      "priority": "Highest"
+    },
+    {
+      "local_ref": "pagos-backend-webhooks",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[BACKEND] Implementar webhooks de la pasarela con validación de firma y reintentos",
+      "description": "## Contexto\nEl flujo actual depende de la respuesta inmediata del pago; se agrega confirmación asíncrona por webhooks.\n\n## Criterios de aceptación\n- [ ] Endpoint de webhook implementado para los eventos de la pasarela.\n- [ ] Validación de firma y origen del webhook.\n- [ ] Procesamiento idempotente: el mismo evento no se aplica dos veces.\n- [ ] Manejo de reintentos y registro de eventos recibidos.\n- [ ] Respuestas correctas para eventos inválidos o repetidos.",
+      "parent": "pagos-story",
+      "priority": "Highest"
+    },
+    {
+      "local_ref": "pagos-backend-concurrencia",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[BACKEND] Evitar condiciones de carrera y confirmación duplicada de pagos",
+      "description": "## Contexto\nWebhooks, reintentos y acciones del usuario pueden confirmar el mismo pago en paralelo.\n\n## Criterios de aceptación\n- [ ] La confirmación del pago es atómica y ocurre una sola vez.\n- [ ] Solicitudes concurrentes del mismo pago no generan doble registro ni doble cobro.\n- [ ] Pruebas que cubran concurrencia y reintentos del webhook.\n- [ ] El estado final del pago es consistente ante eventos fuera de orden.",
+      "parent": "pagos-story",
+      "priority": "Highest"
+    },
+    {
+      "local_ref": "pagos-backend-seguridad",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[BACKEND] Endurecer seguridad y manejo de errores del flujo de pagos",
+      "description": "## Contexto\nEl rediseño incluye mejoras de seguridad y errores más claros en el flujo de pagos.\n\n## Criterios de aceptación\n- [ ] Los errores no exponen secretos, trazas internas ni datos del cliente.\n- [ ] Los mensajes de error permiten distinguir rechazo, fallo temporal y validación.\n- [ ] Las credenciales de la pasarela se leen de configuración, no del código.\n- [ ] Los eventos y errores críticos quedan registrados para diagnóstico.",
+      "parent": "pagos-story",
+      "priority": "High"
+    },
+    {
+      "local_ref": "pagos-frontend-web",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[FRONTEND] Integrar el nuevo flujo de pagos en el checkout de la web",
+      "description": "## Contexto\nLa web debe adaptarse al backend rediseñado y a la confirmación por webhook.\n\n## Criterios de aceptación\n- [ ] El checkout web usa el nuevo flujo y refleja los estados pendiente, confirmado y fallido.\n- [ ] Se manejan errores y tiempos de espera sin dejar al usuario en un estado ambiguo.\n- [ ] La UI evita envíos duplicados, sin reemplazar la validación del backend.\n- [ ] Probado contra el backend actualizado.",
+      "parent": "pagos-story",
+      "priority": "High"
+    },
+    {
+      "local_ref": "pagos-mobile-app",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[MOBILE] Integrar el nuevo flujo de pagos en la app mobile",
+      "description": "## Contexto\nLa app mobile tiene su propio frontend y debe adaptarse al backend rediseñado.\n\n## Criterios de aceptación\n- [ ] El flujo de pago en la app usa el nuevo backend y refleja los estados pendiente, confirmado y fallido.\n- [ ] Se manejan errores, reintentos y pérdida de conexión sin estados ambiguos.\n- [ ] La UI evita envíos duplicados, sin reemplazar la validación del backend.\n- [ ] Probado contra el backend actualizado en staging.",
+      "parent": "pagos-story",
+      "priority": "High"
+    },
+    {
+      "local_ref": "staging-credenciales",
+      "action": "CREATE",
+      "type": "Subtask",
+      "summary": "[DEVOPS] Refactorizar credenciales para pruebas en el staging de Hetzner",
+      "description": "## Contexto\nEl staging online corre en el servidor de Hetzner. Hoy las credenciales dificultan las pruebas y la configuración por entorno.\n\n## Criterios de aceptación\n- [ ] Ninguna credencial queda hardcodeada ni versionada en el repositorio.\n- [ ] Cada entorno (local, staging, producción) toma sus credenciales de variables de entorno o secretos.\n- [ ] Los secretos de staging están configurados en el servidor de Hetzner.\n- [ ] Existe `.env.example` documentado con las variables requeridas y sin valores reales.\n- [ ] El equipo puede levantar y probar staging sin compartir credenciales por canales informales.",
+      "parent": "ENG-186",
+      "priority": "High"
+    }
+  ]
+}
