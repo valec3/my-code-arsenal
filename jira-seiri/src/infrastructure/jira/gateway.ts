@@ -1,22 +1,26 @@
 import { SeiriError } from '../../domain/errors';
 import type { CreateIssueInput, Issue, IssueType, JiraField } from '../../domain/issue';
+import type { JiraBoard, JiraSprint } from '../../domain/sprint';
 import type { IssueTransition } from '../../domain/transition';
 import type { JiraUser } from '../../domain/user';
 import type { JiraGateway } from '../../ports/jira-gateway';
 import { adfToPlainText, plainTextToAdf } from './adf';
 import { JiraHttpClient, type JiraConnectionConfig } from './client';
 import type {
+  JiraBoardsPageDto,
   JiraCreateIssueResponseDto,
   JiraFieldDto,
   JiraIssueDto,
   JiraIssueFieldsDto,
   JiraIssueTypesPageDto,
   JiraSearchResponseDto,
+  JiraSprintsPageDto,
   JiraTransitionsResponseDto,
   JiraUserDto,
 } from './dto';
 
 const PAGE_SIZE = 100;
+const AGILE_PAGE_SIZE = 50;
 
 export interface JiraGatewayOptions {
   storyPointsField?: string;
@@ -200,6 +204,74 @@ export class HttpJiraGateway implements JiraGateway {
     await this.http.put<void>(`/issue/${encodeURIComponent(issueKey)}/assignee`, {
       accountId,
     });
+  }
+
+  async listBoards(projectKey: string): Promise<JiraBoard[]> {
+    const boards: JiraBoard[] = [];
+    let startAt = 0;
+
+    for (;;) {
+      const page = await this.http.agileGet<JiraBoardsPageDto>('/board', {
+        projectKeyOrId: projectKey,
+        startAt,
+        maxResults: AGILE_PAGE_SIZE,
+      });
+
+      const batch = page.values ?? [];
+      for (const dto of batch) {
+        boards.push({
+          id: dto.id,
+          name: dto.name ?? `Board ${dto.id}`,
+          type: dto.type ?? 'unknown',
+        });
+      }
+
+      if (page.isLast || batch.length < AGILE_PAGE_SIZE) {
+        break;
+      }
+      startAt += batch.length;
+    }
+
+    return boards;
+  }
+
+  async listSprints(
+    boardId: number,
+    states: readonly string[] = ['active', 'future', 'closed']
+  ): Promise<JiraSprint[]> {
+    const sprints: JiraSprint[] = [];
+    let startAt = 0;
+
+    for (;;) {
+      const page = await this.http.agileGet<JiraSprintsPageDto>(`/board/${boardId}/sprint`, {
+        state: states.join(','),
+        startAt,
+        maxResults: AGILE_PAGE_SIZE,
+      });
+
+      const batch = page.values ?? [];
+      for (const dto of batch) {
+        sprints.push({
+          id: dto.id,
+          name: dto.name ?? `Sprint ${dto.id}`,
+          state: dto.state ?? 'unknown',
+          startDate: dto.startDate ?? null,
+          endDate: dto.endDate ?? null,
+          boardId: dto.originBoardId ?? boardId,
+        });
+      }
+
+      if (page.isLast || batch.length < AGILE_PAGE_SIZE) {
+        break;
+      }
+      startAt += batch.length;
+    }
+
+    return sprints;
+  }
+
+  async moveIssuesToSprint(sprintId: number, keys: readonly string[]): Promise<void> {
+    await this.http.agilePost<void>(`/sprint/${sprintId}/issue`, { issues: [...keys] });
   }
 
   private mapIssue(dto: JiraIssueDto): Issue {

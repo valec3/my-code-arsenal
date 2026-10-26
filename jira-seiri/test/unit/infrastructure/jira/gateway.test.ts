@@ -5,6 +5,7 @@ import { createJiraGateway } from '../../../../src/infrastructure/jira/gateway';
 
 const HOST = 'https://acme.atlassian.net';
 const API = '/rest/api/3';
+const API_AGILE = '/rest/agile/1.0';
 
 function buildGateway(options: { storyPointsField?: string } = {}) {
   return createJiraGateway(
@@ -312,6 +313,87 @@ describe('HttpJiraGateway', () => {
 
     await expect(buildGateway().assignIssue('ENG-5', 'acc-1')).resolves.toBeUndefined();
     expect(body).toEqual({ accountId: 'acc-1' });
+    expect(scope.isDone()).toBe(true);
+  });
+
+  it('lista boards Scrum paginando', async () => {
+    const firstBatch = Array.from({ length: 50 }, (_, index) => ({
+      id: index + 1,
+      name: `Board ${index + 1}`,
+      type: 'scrum',
+    }));
+
+    const first = nock(HOST)
+      .get(`${API_AGILE}/board`)
+      .query(
+        (query) =>
+          query.projectKeyOrId === 'ENG' &&
+          query.startAt === '0' &&
+          query.maxResults === '50'
+      )
+      .reply(200, { values: firstBatch, isLast: false });
+
+    const second = nock(HOST)
+      .get(`${API_AGILE}/board`)
+      .query((query) => query.projectKeyOrId === 'ENG' && query.startAt === '50')
+      .reply(200, { values: [{ id: 51, name: 'Solo nombre' }], isLast: true });
+
+    const boards = await buildGateway().listBoards('ENG');
+
+    expect(boards).toHaveLength(51);
+    expect(boards[50]).toEqual({ id: 51, name: 'Solo nombre', type: 'unknown' });
+    expect(first.isDone() && second.isDone()).toBe(true);
+  });
+
+  it('lista sprints del board con estados y fechas', async () => {
+    const scope = nock(HOST)
+      .get(`${API_AGILE}/board/7/sprint`)
+      .query(
+        (query) =>
+          query.state === 'active,future,closed' &&
+          query.startAt === '0' &&
+          query.maxResults === '50'
+      )
+      .reply(200, {
+        values: [
+          {
+            id: 5,
+            name: 'Sprint 5',
+            state: 'active',
+            startDate: '2026-10-26T00:00:00.000Z',
+            endDate: '2026-11-01T00:00:00.000Z',
+            originBoardId: 7,
+          },
+        ],
+        isLast: true,
+      });
+
+    await expect(buildGateway().listSprints(7)).resolves.toEqual([
+      {
+        id: 5,
+        name: 'Sprint 5',
+        state: 'active',
+        startDate: '2026-10-26T00:00:00.000Z',
+        endDate: '2026-11-01T00:00:00.000Z',
+        boardId: 7,
+      },
+    ]);
+    expect(scope.isDone()).toBe(true);
+  });
+
+  it('mueve issues a un sprint', async () => {
+    let body: any;
+    const scope = nock(HOST)
+      .post(`${API_AGILE}/sprint/5/issue`, (payload) => {
+        body = payload;
+        return true;
+      })
+      .reply(204);
+
+    await expect(
+      buildGateway().moveIssuesToSprint(5, ['ENG-353', 'ENG-354'])
+    ).resolves.toBeUndefined();
+    expect(body).toEqual({ issues: ['ENG-353', 'ENG-354'] });
     expect(scope.isDone()).toBe(true);
   });
 });

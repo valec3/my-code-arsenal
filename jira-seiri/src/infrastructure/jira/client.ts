@@ -12,21 +12,22 @@ export interface JiraConnectionConfig {
 
 export class JiraHttpClient {
   private readonly http: AxiosInstance;
+  private readonly agile: AxiosInstance;
   private readonly maxRetries: number;
   private readonly baseDelayMs: number;
 
   constructor(config: JiraConnectionConfig) {
     const credentials = Buffer.from(`${config.email}:${config.apiToken}`).toString('base64');
+    const host = normalizeHost(config.host);
+    const timeout = config.timeoutMs ?? 15000;
+    const headers = {
+      Authorization: `Basic ${credentials}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
 
-    this.http = axios.create({
-      baseURL: `${normalizeHost(config.host)}/rest/api/3`,
-      timeout: config.timeoutMs ?? 15000,
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
+    this.http = axios.create({ baseURL: `${host}/rest/api/3`, timeout, headers });
+    this.agile = axios.create({ baseURL: `${host}/rest/agile/1.0`, timeout, headers });
 
     this.maxRetries = config.maxRetries ?? 3;
     this.baseDelayMs = config.baseDelayMs ?? 300;
@@ -46,6 +47,14 @@ export class JiraHttpClient {
 
   delete(path: string): Promise<void> {
     return this.request<void>(() => this.http.delete(path), true);
+  }
+
+  agileGet<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+    return this.request<T>(() => this.agile.get<T>(path, { params }), true);
+  }
+
+  agilePost<T>(path: string, body: unknown): Promise<T> {
+    return this.request<T>(() => this.agile.post<T>(path, body), false);
   }
 
   private async request<T>(

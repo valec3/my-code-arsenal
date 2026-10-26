@@ -26,13 +26,14 @@ La IA **nunca** llama a la API de Jira. Solo genera un JSON que vos revisás en 
 
 ## Estado
 
-Fase 7 — `users` y `assign`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users` y `seiri assign`.
+Fase 8 — `sprints` y `sprint-move`. Disponible: `seiri init`, `seiri pull`, `seiri validate`, `seiri apply`, `seiri transition`, `seiri users`, `seiri assign`, `seiri sprints` y `seiri sprint-move`.
 
 - `pull` sincroniza proyecto, tipos de issue e issues a SQLite (upsert transaccional) y genera `.jira_context.md` con presupuesto de issues.
 - `validate` revisa el contrato v1, la jerarquía real del proyecto (desde `createmeta`) y los duplicados por similitud, sin tocar la red.
 - `apply` crea las issues en Jira, actualiza el cache local y registra la migración para que sea idempotente y retomable.
 - `transition` mueve issues existentes a otro estado usando las transiciones del workflow, sin inventar IDs.
 - `users` lista los usuarios asignables del proyecto y `assign` asigna issues existentes por `accountId`.
+- `sprints` lista los boards Scrum y sus sprints; `sprint-move` mueve issues existentes a un sprint.
 
 ## Requisitos
 
@@ -214,6 +215,56 @@ Requiere el permiso **Assign issues** sobre el proyecto.
 | `2` | Ninguna se pudo asignar |
 | `4` | Parcial: asignar las que quedaron y volver a correr |
 
+### sprints
+
+Lista los boards con sprints del proyecto y sus sprints. Se aceptan boards `scrum` y `simple` (este último es el tipo que usa Jira para proyectos team-managed). Los boards Kanban no se consideran porque no usan sprints. Si hay más de un board válido, hay que elegir uno con `--board`.
+
+```bash
+npx tsx src/cli.ts sprints endogastro
+npx tsx src/cli.ts sprints endogastro --board 7 --state active,future
+npx tsx src/cli.ts sprints endogastro --json
+```
+
+Garantías:
+
+- **Solo boards con sprints:** acepta `scrum` y `simple`; si el proyecto no tiene ninguno, falla con exit `1` y muestra los boards encontrados.
+- **Sin escrituras:** es una consulta de solo lectura.
+- **Estados:** `active`, `future` y `closed`; por defecto lista los tres.
+
+Requiere Jira Software y permiso para ver el board.
+
+| Exit | Significado |
+|---|---|
+| `0` | Listado OK (puede no haber sprints) |
+| `1` | El proyecto no tiene board Scrum o falló la API |
+| `2` | `--board` inválido o hay varios boards sin elegir |
+
+### sprint-move
+
+Mueve issues existentes a un sprint. Valida que el sprint exista en un board Scrum del proyecto y que no esté cerrado antes de escribir.
+
+```bash
+npx tsx src/cli.ts sprint-move endogastro 5 ENG-353 ENG-354 --dry-run
+npx tsx src/cli.ts sprint-move endogastro 5 ENG-353 ENG-354
+npx tsx src/cli.ts sprint-move endogastro 5 ENG-353 --board 7 --json
+```
+
+Garantías:
+
+- **Sin inventos:** el `sprintId` y el `boardId` salen de `seiri sprints`; no se resuelven por nombre.
+- **Sprint abierto:** rechaza sprints `closed` antes de mover.
+- **Parcial:** si una issue falla, sigue con las demás y devuelve exit `4`; si todas fallan, exit `2`.
+- **Dry-run:** resuelve el sprint y muestra el plan sin escribir.
+- **Cache:** la pertenencia al sprint no se guarda en SQLite; `sprint-move` no modifica el cache.
+
+Requiere el permiso **Manage sprints** y que las issues pertenezcan al board.
+
+| Exit | Significado |
+|---|---|
+| `0` | Todas movidas o dry-run |
+| `2` | Ninguna se pudo mover o el sprint no es válido |
+| `4` | Parcial: mover las que quedaron y volver a correr |
+
 ## Después del pull
 
 1. Abrí `projects/endogastro/.jira_context.md` y verificá que estén tus epics, stories y subtasks con sus estados.
@@ -221,6 +272,7 @@ Requiere el permiso **Assign issues** sobre el proyecto.
 3. Escribí la migración, corré `seiri validate` y después `seiri apply --dry-run` para ver el plan. Recién ahí `seiri apply`.
 4. Si hace falta mover estados, usá `seiri transition` con `--dry-run` primero.
 5. Para asignar responsables, listá con `seiri users` y después usá `seiri assign` con el `accountId`.
+6. Para planificar el trabajo, listá los sprints con `seiri sprints` y mové issues con `seiri sprint-move`.
 
 ## Skills y agentes
 
@@ -253,7 +305,7 @@ schema.sql                     esquema completo e idempotente
 src/
   cli.ts                       composition root + manejo de errores
   commands/                    un archivo por comando (delgados)
-  application/                 casos de uso: init, pull, contexto, validate, apply, transition, assign
+  application/                 casos de uso: init, pull, contexto, validate, apply, transition, assign, sprints
   domain/                      reglas puras: errores, contrato v1, jerarquia, similitud
   config/                      rutas y carga de .env
   shared/                      logger y exit codes

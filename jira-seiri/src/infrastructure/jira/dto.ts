@@ -69,6 +69,31 @@ export interface JiraUserDto {
   active?: boolean;
 }
 
+export interface JiraBoardDto {
+  id: number;
+  name?: string;
+  type?: string;
+}
+
+export interface JiraBoardsPageDto {
+  values?: JiraBoardDto[];
+  isLast?: boolean;
+}
+
+export interface JiraSprintDto {
+  id: number;
+  name?: string;
+  state?: string;
+  startDate?: string;
+  endDate?: string;
+  originBoardId?: number;
+}
+
+export interface JiraSprintsPageDto {
+  values?: JiraSprintDto[];
+  isLast?: boolean;
+}
+
 export interface JiraErrorDto {
   errorMessages?: string[];
   errors?: Record<string, string>;

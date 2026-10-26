@@ -8,6 +8,8 @@ import { registerApplyCommand } from './commands/apply';
 import { registerTransitionCommand } from './commands/transition';
 import { registerUsersCommand } from './commands/users';
 import { registerAssignCommand } from './commands/assign';
+import { registerSprintsCommand } from './commands/sprints';
+import { registerSprintMoveCommand } from './commands/sprint-move';
 import { SeiriError } from './domain/errors';
 import { EXIT, exitCodeFor } from './shared/exit-codes';
 
@@ -27,6 +29,8 @@ registerApplyCommand(program);
 registerTransitionCommand(program);
 registerUsersCommand(program);
 registerAssignCommand(program);
+registerSprintsCommand(program);
+registerSprintMoveCommand(program);
 
 program.addHelpText(
   'after',
@@ -41,7 +45,10 @@ ${pc.bold('Flujo de trabajo:')}
                                  mueve issues segun el workflow
   7. seiri users <proyecto>      lista usuarios asignables
   8. seiri assign <proyecto> <accountId> <keys...>
-                                 asigna issues existentes
+                                  asigna issues existentes
+  9. seiri sprints <proyecto>    lista boards Scrum y sprints
+ 10. seiri sprint-move <proyecto> <sprintId> <keys...>
+                                  mueve issues a un sprint
 
 Seiri nunca crea nada sin un archivo de migracion revisado.
 `
