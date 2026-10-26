@@ -1,0 +1,17 @@
+# Dependencias y compilados locales
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Configuracion y credenciales locales
+.env
+projects/*/.env
+
+# Estado local generado por la CLI
+*.db
+*.db-wal
+*.db-shm
+.jira_context.md
+
+# Registry de skills (generado automaticamente)
+.atl/

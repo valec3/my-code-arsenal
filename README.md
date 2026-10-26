@@ -24,6 +24,7 @@ A diferencia de los monorepos tradicionales sobrecargados con herramientas como 
 | :--- | :--- | :--- | :---: | :---: |
 | **`express-file-uploader`** | Express, TypeScript, Multer | Servidor optimizado para subida, filtrado y validación rigurosa de archivos. | 🏗️ En Desarrollo | [Explorar 📂](./express-file-uploader) |
 | **`node-jira-bot`** | Node.js, TypeScript, Axios | CLI y automatización para la creación y gestión ágil de tareas directamente en Jira. | 🏗️ En Desarrollo | [Explorar 📂](./node-jira-bot) |
+| **`jira-seiri`** | Node.js, TypeScript, SQLite (FTS5) | Sincronización declarativa Jira ↔ SQLite local con migraciones en JSON diseñadas para agentes de IA. | 🏗️ Bootstrap | [Explorar 📂](./jira-seiri) |
 
 ---
 

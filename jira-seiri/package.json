@@ -1,0 +1,46 @@
+{
+  "name": "jira-seiri",
+  "version": "0.1.0",
+  "description": "CLI de sincronizacion declarativa entre Jira Cloud y SQLite local, disenado para agentes de IA",
+  "main": "dist/cli.js",
+  "bin": {
+    "seiri": "dist/cli.js"
+  },
+  "scripts": {
+    "seiri": "tsx src/cli.ts",
+    "dev": "tsx src/cli.ts",
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "jira",
+    "sqlite",
+    "cli",
+    "migrations",
+    "ai-agents",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "better-sqlite3": "^11.8.1",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "picocolors": "^1.1.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "nock": "^15.0.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

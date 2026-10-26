@@ -1,0 +1,21 @@
+export const EXIT = {
+  OK: 0,
+  UNEXPECTED: 1,
+  VALIDATION: 2,
+  DUPLICATE: 3,
+} as const;
+
+const CODE_TO_EXIT: Record<string, number> = {
+  CONFIG: EXIT.UNEXPECTED,
+  INVALID_PROJECT: EXIT.VALIDATION,
+  SCHEMA: EXIT.UNEXPECTED,
+  DB: EXIT.UNEXPECTED,
+  JIRA: EXIT.UNEXPECTED,
+  VALIDATION: EXIT.VALIDATION,
+  DUPLICATE: EXIT.DUPLICATE,
+  UNEXPECTED: EXIT.UNEXPECTED,
+};
+
+export function exitCodeFor(code: string): number {
+  return CODE_TO_EXIT[code] ?? EXIT.UNEXPECTED;
+}

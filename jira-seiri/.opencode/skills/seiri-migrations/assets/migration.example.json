@@ -1,0 +1,34 @@
+{
+  "project": "endogastro",
+  "description": "Backlog inicial de autenticación",
+  "source": "reunión 2026-10-24",
+  "items": [
+    {
+      "local_ref": "auth-epic",
+      "action": "CREATE",
+      "type": "Epic",
+      "summary": "ÉPICA: Autenticación - Acceso seguro con email",
+      "description": "## Contexto\nHoy el acceso es manual y no hay autoservicio.\n\n## Alcance\n- Registro y verificación por email.\n- Reset de contraseña.\n\n## Fuera de alcance\n- SSO corporativo.",
+      "labels": ["auth"]
+    },
+    {
+      "local_ref": "auth-reset",
+      "action": "CREATE",
+      "type": "Story",
+      "summary": "HU: Usuario restablece su contraseña por email",
+      "description": "## Contexto\nEl usuario olvida su contraseña y no puede recuperar la cuenta.\n\n## Criterios de aceptación\n- [ ] Dado un email registrado, cuando pide reset, entonces recibe un mail con un link válido por 30 minutos.\n- [ ] Dado un token expirado, cuando lo usa, entonces ve un error claro y puede pedir otro.",
+      "parent": "auth-epic",
+      "story_points": 5,
+      "labels": ["auth"]
+    },
+    {
+      "local_ref": "auth-reset-backend",
+      "action": "CREATE",
+      "type": "Sub-task",
+      "summary": "[BACKEND] Endpoint POST /auth/reset",
+      "description": "Implementar solicitud de reset, generación de token y envío de email.",
+      "parent": "auth-reset",
+      "labels": ["auth", "backend"]
+    }
+  ]
+}
