@@ -1,0 +1,15 @@
+{
+  "project": "endogastro",
+  "description": "Renombrar la seccion Examenes auxiliares a Reevaluacion y reubicarla debajo de Plan en la atencion del especialista.",
+  "source": "pedido directo del usuario",
+  "items": [
+    {
+      "local_ref": "reevaluacion-app-especialista",
+      "action": "CREATE",
+      "type": "Task",
+      "summary": "[MOBILE] Renombrar «Exámenes auxiliares» a «Reevaluación» y moverlo debajo de «Plan»",
+      "description": "Contexto: en la atención del especialista, la sección que hoy se muestra como «Exámenes auxiliares» debe pasar a llamarse «Reevaluación» y quedar ubicada inmediatamente debajo de «Plan».\n\nCriterios de aceptación:\n- El texto visible es «Reevaluación»; no queda ningún «Exámenes auxiliares» en esa pantalla.\n- La sección aparece debajo de «Plan» en el orden de la atención.\n- Se conserva el contenido y la funcionalidad actual de la sección.\n- Aplica en iOS y Android.\n\nNota: si el cambio corresponde al sistema web y no a la app mobile, mover la tarea al épico correspondiente.",
+      "parent": "ENG-168"
+    }
+  ]
+}
