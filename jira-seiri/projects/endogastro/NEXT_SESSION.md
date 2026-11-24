@@ -18,67 +18,48 @@ npx tsx src/cli.ts pull endogastro
 
 - **Sprint 69** «Verificación feedback octubre»: **active**, 2026-10-26 → 2026-11-01.
 - **Sprint 36** «ENG Sprint 4»: **active** y viejo (2026-09-01 → 2026-09-02). El board permite sprints paralelos; no se cerró.
-- **ENG-353..367**: 15 issues del feedback web/app, **In Progress**, asignadas a **Victor** y dentro del sprint 69.
+- **ENG-353..367**: 15 issues del feedback web/app dentro del sprint 69:
+  - **Done (3):** ENG-353 (Web tildes/nav), ENG-356 (HU Mobile Paciente), ENG-361 (HU Mobile Especialista).
+  - **In Review (10):** ENG-357..360 (Mobile Paciente) y ENG-362..367 (Mobile Especialista).
+  - **In Progress (2):** ENG-354 (Sincro web/sistema) y ENG-355 (CPRE/SEO Puno).
 - Board: «ENG board» (id 2), tipo `simple` (team-managed).
-- Cache: 233 issues. Estados: To Do 150, Done 69, In Progress 10, In Review 4. No existe estado «Backlog».
+- Cache local: 257 issues sincronizadas (101 Done, 131 To Do, 14 In Review, 11 In Progress).
 
 ## Pendientes, en orden
 
-### 1. Verificar las 15 issues y pasarlas a Done
+### 1. Verificar las 10 issues en In Review y pasarlas a Done
 
-| Key | Qué verificar |
-|---|---|
-| ENG-353 | Tildes en Gastroenterología/Servicios; tabs Especialidades/Otros sin recargar; desktop y mobile |
-| ENG-354 | Especialistas, laboratorio y farmacia toman datos/fotos del sistema; un cambio se refleja en la web |
-| ENG-355 | CPRE como procedimiento; Puno en cada especialidad; metas locales; sin contenido duplicado |
-| ENG-356 | Story paciente: reservas, tienda y sesión OK en iOS y Android |
-| ENG-357 | Entrada con fondo claro/logo; copy del slide; slider con más especialidades; bordes amarillos; Cinzel; INICIO |
-| ENG-358 | Reservas con nombre/especialidad/foto desde la web; placeholder; horas centradas; fecha con borde verde |
-| ENG-359 | Tienda con bordes en farmacia/laboratorio/búsqueda; foto desde la web; placeholder; sin deformar |
-| ENG-360 | Editar datos guarda y refleja; logout vuelve al login; PERÚ eliminado |
-| ENG-361 | Story especialista: atención, receta y laboratorio OK en iOS y Android |
-| ENG-362 | Login con anuncio de trabajo; «Portal del especialista»; botón Perfil médico |
-| ENG-363 | Paciente nuevo abre pestaña inicial; formulario limpio; últimos 10 pacientes; criterio único de salas |
-| ENG-364 | Atención centrada con borde; inputs/diagnóstico/búsqueda con borde; fondos; WhatsApp; contraste |
-| ENG-365 | Indicaciones y dieta vacías; receta sin recomendaciones no inventa texto; PDF fiel |
-| ENG-366 | Previsualizar receta/lab/farmacia no crea; guardar genera PDF; repetir preview no duplica |
-| ENG-367 | Botones Orden de laboratorio/Finalizar; sin «Volver a examen físico»; finalizar al final del lab; no pierde receta |
-
-Cuando el usuario confirme, mover en bloque:
+Cuando el usuario confirme haber verificado en app/web:
 
 ```bash
-npx tsx src/cli.ts transition endogastro ENG-353 ENG-354 ENG-355 ENG-356 ENG-357 ENG-358 ENG-359 ENG-360 ENG-361 ENG-362 ENG-363 ENG-364 ENG-365 ENG-366 ENG-367 --to Done
+npx tsx src/cli.ts transition endogastro ENG-357 ENG-358 ENG-359 ENG-360 ENG-362 ENG-363 ENG-364 ENG-365 ENG-366 ENG-367 --to Done
 ```
 
-Los criterios completos están en `migrations/2026-10-26_feedback-web-app.json`.
+Y revisar si ENG-354 y ENG-355 ya se terminaron.
 
-### 2. Decidir qué hacer con el sprint 36
+### 2. Sincerar tickets zombis en In Progress (Auditoría completada)
+
+Hay 8 tickets estancados en In Progress con 43-84 días de inactividad que distorsionan el WIP:
+- `ENG-117` (84d): Fix Error 500 al procesar pago o registro automático en Anatomía Patológica.
+- `ENG-243` / `ENG-244` (81d): Configurar bucket R2 y endpoint de upload de consentimiento.
+- `ENG-226` / `ENG-227` (62d): GAP cumplimiento y resumen legal.
+- `ENG-253` (62d): Comunicar designación del OPD a la ANPD.
+- `ENG-321` (62d): HU: Datos de Contacto en PDF.
+- `ENG-254` (43d): HU: Clasificación de Datos y Evidencia de Controles.
+
+Decisión pendiente: pasarlos a Done si ya se resolvieron en la práctica, o devolverlos a To Do para no mentirle al tablero.
+
+### 3. Decidir qué hacer con el sprint 36
 
 Sigue activo desde septiembre. Opciones: cerrarlo desde Jira o dejarlo si tiene trabajo real. No hay comando `sprint-close`.
 
-### 3. Detallar los ajustes de laboratorio
+### 4. Detallar los ajustes de laboratorio
 
-Quedaron pendientes de desglose en la conversación anterior. Revisar el feedback de laboratorio y convertirlo en tareas concretas, sin duplicar las existentes.
+Revisar el feedback de laboratorio y cruzarlo con los 10 tickets existentes en `ENG-134` (`ENG-135..139`, `ENG-191..195`) para no duplicar.
 
-### 4. Recibir la lista de bugs de otras áreas
+### 5. Recibir la lista de bugs de otras áreas
 
 El usuario iba a pasar una lista de bugs fuera de web/app. Agrupar por área y evitar saturar de issues.
-
-### 5. Consulta de pendientes antiguos (no ejecutada)
-
-El usuario preguntó qué pendientes llevan demasiado tiempo. Quedó sin correr por el cierre de sesión. Consultar en el cache:
-
-```sql
-SELECT key, issue_type, status, substr(jira_created_at, 1, 10) AS created,
-       CAST(julianday('now') - julianday(jira_created_at) AS INTEGER) AS age_days,
-       summary
-FROM issues
-WHERE status IN ('To Do', 'In Progress', 'In Review')
-ORDER BY jira_created_at ASC
-LIMIT 35;
-```
-
-Agrupar por antigüedad (30-89, 90-179, 180+) y por épica. Para In Progress, mirar también `jira_updated_at` (inactividad).
 
 ## Comandos útiles
 
